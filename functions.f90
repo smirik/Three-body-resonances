@@ -1,24 +1,26 @@
-subroutine squarize(x)
+! get semimajor axis from mean motion
+! n — mean motion of object
+function a_from_n (n)
+  implicit none 
+
+  real, parameter :: k = 0.017202098795
+  real :: a, n
+  
+  real :: a_from_n
+  
+  a = (k/n)**(2.0/3.0)
+  a_from_n = a
+end function a_from_n
+
+! get mean motion from semimajor axis
+! a — semimajor axis
+function n_from_a (a) result (mean_motion)
   implicit none
-  real :: x
-  
-  x = x**2
-end subroutine squarize
 
-function square(x)
-  square = x**2
-end function
-
-recursive function nfactorial(n) result (fac) 
-  ! computes the factorial of n (n!)
-  integer :: fac
-  integer, intent(in) :: n
+  real, parameter :: k2 = 0.0002959122082855911025
+  real :: a, n
+  real :: mean_motion
   
-  fac = 0.0
-  select case (n) 
-    case (0:1)
-      fac = 1 
-    case default
-      fac = n * nfactorial (n-1) 
-  end select
-end function nfactorial
+  n = (k2 / (a**3))**0.5
+  mean_motion = n
+end function n_from_a
