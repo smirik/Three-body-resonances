@@ -1,4 +1,7 @@
 ! find axis by resonance (Nesvorny 1998, Gallardo 2006)
+! Parameters: resonance — array of Integer (6 numbers)
+! a_* — semimajor axis of body, n_* — mean motion, l_* — mean longitude
+! return float — the corresponding value for given resonance of semimajor axis
 function count_axis(resonance, a_j, n_j, l_j, a_s, n_s, l_s, a_a, n_a, l_a)
   implicit none
 
@@ -9,6 +12,7 @@ function count_axis(resonance, a_j, n_j, l_j, a_s, n_s, l_s, a_a, n_a, l_a)
   real, dimension(6) :: resonance
   
   real, parameter :: k = 0.017202098795, pi = 3.141592653589
+  
   n_a = (-resonance(1)*n_j-resonance(2)*n_s-resonance(4)*l_j-resonance(5)*l_s)/resonance(3)
   if (n_a < 0) then
     count_axis = -1.0

@@ -1,6 +1,6 @@
 program resonances
   implicit none
-  ! a_j — semimajor axe of Jupiter, n_j — mean motion of Jupiter
+  ! a_j — semimajor axe of Jupiter, n_j — mean motion of Jupiter, l_j — mean longitude of Jupiter
   real, parameter :: a_j = 5.204267, n_j = 0.00145024678779705, l_j = 5.65063905672262e-08
   real, parameter :: a_s  = 5.204267, n_s = 0.000583991090866933, l_s = 3.74890765513312e-07
   ! order of resonance
