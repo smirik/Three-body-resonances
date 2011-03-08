@@ -24,4 +24,7 @@ function count_axis(resonance, a_j, n_j, l_j, a_s, n_s, l_s, a_a, n_a, l_a)
     a_a = a_from_n(n_a) ! formula for s/a
     count_axis = a_a
   end if
+  if (isnan(count_axis)) then
+    count_axis = 0.0
+  end if
 end function count_axis
