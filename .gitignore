@@ -1,2 +1,5 @@
 catalog/*
 vendor
+*.o
+result
+calc
