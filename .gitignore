@@ -5,3 +5,4 @@ result
 calc
 axis/*.o
 axis/axis
+output/png/*
