@@ -15,13 +15,13 @@ class Numeric
 end
 
 def by_mod(l)
-  if (l > Math::PI)
-    while (l > Math::PI)
-      l = l - Math::PI
+  if (l > 2*Math::PI)
+    while (l > 2*Math::PI)
+      l = l - 2*Math::PI
     end
   else
-    while (l < -Math::PI)
-      l = l + Math::PI
+    while (l < 0)
+      l = l + 2*Math::PI
     end
   end
   l
@@ -50,8 +50,8 @@ def calc(filename, resonance)
   result_file = File.open('result', 'w+')
 
   #result_file.write('BODY: '+body['name']+"\n")
-  j_filename = 'JUPITER.aei'
-  s_filename = 'SATURN.aei'
+  j_filename = 'mercury/JUPITER.aei'
+  s_filename = 'mercury/SATURN.aei'
   
   stdin   = File.open(filename)
   j_stdin = File.open(j_filename)
@@ -70,8 +70,13 @@ def calc(filename, resonance)
   axe_initial = tmp[4]
   #result_file.write("#axe = #{tmp[4]}, mean motion = #{tmp[3]}\n")
   #result_file.write(sprintf("%12s %12s %12s %12s %12s %12s\n", "time", "sigma", "s/m axe", "lambda_j", "lambda_s", "lambda"))
+
+  medium_angle = 0
+  medium_time = 0
+  counter = 0
   
   for i in 4..len
+    counter+=1
     datas   = parse_str(content[i])    
     j_datas = parse_str(j_content[i])
     s_datas = parse_str(s_content[i])
@@ -86,8 +91,19 @@ def calc(filename, resonance)
     
     #ss = time.to_s+' '+m_longitude.to_s+' '+mean_motion.to_s+"\n"
     #ss = sprintf("%12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], j_datas[1], s_datas[1], datas[1])
-    ss = sprintf("%6f %6f %6f %6f %6f\n", datas[0], angle, datas[4], z.real, z.image)
-    result_file.write(ss)
+    if (counter < 11)
+      medium_angle+=angle
+      medium_time+=datas[0].to_f
+    else
+      counter = 0
+      #ss = sprintf("%6f %6f %6f %6f %6f\n", datas[0], angle, datas[4], z.real, z.image)
+      ss = sprintf("%6f %6f %6f\n", medium_time/10.0, medium_angle/10.0, datas[4])
+      result_file.write(ss)
+      
+      medium_angle = 0
+      medium_time  = 0
+    end
+    
   end
 
   result_file.close
@@ -97,15 +113,16 @@ end
 objects = [ ['A982',  [3.0, -2.0, -1.0, 0, 0, 0.0]],
             ['A138',  [7.0, -2.0, -2.0, 0, 0, -3.0]],
             ['A463',  [4.0, -2.0, -1.0, 0, 0, -1.0]],
-            ['A463B', [4.0, -3.0, -1.0, 0, 0, -0.0]],
-            ['A463C', [4.0, -2.0, -2.0, 0, 0, -0.0]],
-            ['A3',    [7.0, -4.0, -2.0, 0, 0, -1.0]]
+            ['A3',    [7.0, -4.0, -2.0, 0, 0, -1.0]],
+            ['A3460', [5.0, -2.0, -2.0, 0, 0, -1.0]],
+            ['A3460B', [5.0, -3.0, -1.0, 0, 0, -1.0]],
+            ['A10',   [8.0, -4.0, -3.0, 0, 0, -1.0]],
+            ['A10B',   [7.0, -3.0, -3.0, 0, 0, -1.0]]
           ]
 
 objects.each do |elem|
   obj = elem[0]
-  calc(obj+'.aei', elem[1])
-  `gnuplot angle.gnu > png/angle#{obj}.png`
-  `gnuplot axe.gnu > png/axe#{obj}.png`
-  `gnuplot complex.gnu > png/complex#{obj}.png`
+  calc('mercury/'+obj+'.aei', elem[1])
+  `gnuplot output/angle.gnu > output/png/angle#{obj}.png`
+  `gnuplot output/axe.gnu > output/png/axe#{obj}.png`
 end
