@@ -3,3 +3,5 @@ vendor
 *.o
 result
 calc
+axis/*.o
+axis/axis
