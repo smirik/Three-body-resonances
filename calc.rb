@@ -74,7 +74,9 @@ def calc(filename, resonance)
   medium_angle = 0
   medium_time = 0
   counter = 0
+  previous = Array.new
   
+  previous = Array.new
   for i in 4..len
     counter+=1
     datas   = parse_str(content[i])    
@@ -90,34 +92,57 @@ def calc(filename, resonance)
     z = Math::exp(Complex::I*angle)
     
     #ss = time.to_s+' '+m_longitude.to_s+' '+mean_motion.to_s+"\n"
-    #ss = sprintf("%12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], j_datas[1], s_datas[1], datas[1])
-    if (counter < 11)
-      medium_angle+=angle
-      medium_time+=datas[0].to_f
+    ss = sprintf("%12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], j_datas[1], s_datas[1], datas[1])
+    result_file.write(ss)
+    if false
+    if (counter < 20)
+      previous.push(angle)
     else
-      counter = 0
       #ss = sprintf("%6f %6f %6f %6f %6f\n", datas[0], angle, datas[4], z.real, z.image)
-      ss = sprintf("%6f %6f %6f\n", medium_time/10.0, medium_angle/10.0, datas[4])
+      previous.push(angle)
+      medium_value = by_mod(previous.inject(0){|res, elem| res+elem}/20.0)
+      previous.delete_at(0)
+      
+      #ss = sprintf("%6f %6f %6f\n", medium_time/10.0, medium_angle/10.0, datas[4])
+      ss = sprintf("%6f %6f %6f\n", datas[0], medium_value, datas[4])
       result_file.write(ss)
       
-      medium_angle = 0
-      medium_time  = 0
+      medium_value = 0
     end
-    
+    end
+  
   end
 
   result_file.close
 
 end
 
-objects = [ ['A982',  [3.0, -2.0, -1.0, 0, 0, 0.0]],
-            ['A138',  [7.0, -2.0, -2.0, 0, 0, -3.0]],
-            ['A463',  [4.0, -2.0, -1.0, 0, 0, -1.0]],
-            ['A3',    [7.0, -4.0, -2.0, 0, 0, -1.0]],
-            ['A3460', [5.0, -2.0, -2.0, 0, 0, -1.0]],
+objects = [ ['A982',   [3.0, -2.0, -1.0, 0, 0, 0.0]],
+            ['A138',   [7.0, -2.0, -2.0, 0, 0, -3.0]],
+            ['A463',   [4.0, -2.0, -1.0, 0, 0, -1.0]],
+            ['A3',     [7.0, -4.0, -2.0, 0, 0, -1.0]],
+            ['A3460',  [5.0, -2.0, -2.0, 0, 0, -1.0]],
             ['A3460B', [5.0, -3.0, -1.0, 0, 0, -1.0]],
-            ['A10',   [8.0, -4.0, -3.0, 0, 0, -1.0]],
-            ['A10B',   [7.0, -3.0, -3.0, 0, 0, -1.0]]
+            ['A10',    [8.0, -4.0, -3.0, 0, 0, -1.0]],
+            ['A10B',   [7.0, -3.0, -3.0, 0, 0, -1.0]],
+            ['A2440',  [4.0, -1.0, -1.0, 0, 0, -2.0]],
+            ['A2440B', [4.0, -1.0, -2.0, 0, 0, -1.0]],
+            ['A2440C', [3.0,  1.0, -1.0, 0, 0, -3.0]],
+            ['A1966',  [7.0, -2.0, -2.0, 0, 0, -3.0]],
+            ['A1966B', [7.0, -2.0, -3.0, 0, 0, -2.0]],
+            ['A1966C', [7.0, -3.0, -3.0, 0, 0, -1.0]],
+            ['A1430',  [7.0, -3.0, -2.0, 0, 0, -2.0]],
+            ['A1430B', [7.0, -4.0, -2.0, 0, 0, -1.0]],
+            ['A1430C', [7.0, -3.0, -3.0, 0, 0, -1.0]],
+            ['A53',    [6.0, -1.0, -2.0, 0, 0, -3.0]],
+            ['A53B',   [2.0,  2.0, -1.0, 0, 0, -3.0]],
+            ['A53C',   [4.0, -3.0, -1.0, 0, 0,  0.0]],
+            ['A258',   [2.0,  2.0, -1.0, 0, 0, -3.0]],
+            ['A258B',  [6.0, -1.0, -2.0, 0, 0, -3.0]],
+            ['A258C',  [4.0, -3.0, -1.0, 0, 0,  0.0]],
+            ['A792',   [4.0, -3.0, -1.0, 0, 0,  0.0]],
+            ['A792B',  [6.0, -1.0, -2.0, 0, 0, -3.0]],
+            ['A792C',  [2.0,  2.0, -1.0, 0, 0, -3.0]]
           ]
 
 objects.each do |elem|
