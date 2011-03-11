@@ -39,10 +39,11 @@ def parse_str(s)
   p_longitude  = datas[1].to_f
   mean_anomaly = datas[2].to_f
   semi_axe     = datas[3].to_f
+  ecc          = datas[4].to_f
   
   m_longitude  = p_longitude + mean_anomaly
   mean_motion  = mean_motion_from_axe(semi_axe).to_deg
-  [time, m_longitude, p_longitude, mean_motion, semi_axe]
+  [time, m_longitude, p_longitude, mean_motion, semi_axe, ecc]
 end  
 
 def calc(filename, resonance)
@@ -92,7 +93,7 @@ def calc(filename, resonance)
     z = Math::exp(Complex::I*angle)
     
     #ss = time.to_s+' '+m_longitude.to_s+' '+mean_motion.to_s+"\n"
-    ss = sprintf("%12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], j_datas[1], s_datas[1], datas[1])
+    ss = sprintf("%12f %12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], datas[5], j_datas[1], s_datas[1], datas[1])
     result_file.write(ss)
     if false
     if (counter < 20)
@@ -150,4 +151,5 @@ objects.each do |elem|
   calc('mercury/'+obj+'.aei', elem[1])
   `gnuplot output/angle.gnu > output/png/angle#{obj}.png`
   `gnuplot output/axe.gnu > output/png/axe#{obj}.png`
+  `gnuplot output/multi.gnu > output/png/multi#{obj}.png`
 end
