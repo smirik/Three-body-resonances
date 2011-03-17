@@ -15,12 +15,12 @@ class Numeric
 end
 
 def by_mod(l)
-  if (l > 2*Math::PI)
-    while (l > 2*Math::PI)
+  if (l > Math::PI)
+    while (l > Math::PI)
       l = l - 2*Math::PI
     end
   else
-    while (l < 0)
+    while (l < -Math::PI)
       l = l + 2*Math::PI
     end
   end
@@ -36,13 +36,13 @@ end
 def parse_str(s)
   datas = s.split(' ')
   time = datas[0]
-  p_longitude  = datas[1].to_f
-  mean_anomaly = datas[2].to_f
+  p_longitude  = datas[1].to_f.from_deg
+  mean_anomaly = datas[2].to_f.from_deg
   semi_axe     = datas[3].to_f
   ecc          = datas[4].to_f
-  
+
   m_longitude  = p_longitude + mean_anomaly
-  mean_motion  = mean_motion_from_axe(semi_axe).to_deg
+  mean_motion  = mean_motion_from_axe(semi_axe)
   [time, m_longitude, p_longitude, mean_motion, semi_axe, ecc]
 end  
 
@@ -84,10 +84,9 @@ def calc(filename, resonance)
     j_datas = parse_str(j_content[i])
     s_datas = parse_str(s_content[i])
     
-    angle = resonance[0]*j_datas[1]+resonance[1]*s_datas[1]+resonance[2]*datas[1]
-           +resonance[3]*j_datas[2]+resonance[4]*s_datas[2]+resonance[5]*datas[2]
+    angle = resonance[0]*j_datas[1]+resonance[1]*s_datas[1]+resonance[2]*datas[1]+resonance[3]*j_datas[2]+resonance[4]*s_datas[2]+resonance[5]*datas[2]
     
-    angle = angle.from_deg
+    #angle = angle.to_deg
     angle = by_mod(angle)
     
     z = Math::exp(Complex::I*angle)
