@@ -1,4 +1,4 @@
-*Package for three-body resonances*
+**Package for three-body resonances**
 
 *Part 1. Find the corresponding s/m axis*
 
