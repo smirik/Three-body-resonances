@@ -7,3 +7,4 @@ axis/*.o
 axis/axis
 output/png/*
 input/mercury/*.in
+*.res

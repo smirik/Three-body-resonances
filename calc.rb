@@ -46,9 +46,10 @@ def parse_str(s)
   [time, m_longitude, p_longitude, mean_motion, semi_axe, ecc]
 end  
 
-def calc(filename, resonance)
+def calc(filename, resonance, obj)
   # open result file
-  result_file = File.open('result', 'w+')
+  result_file   = File.open('result', 'w+')
+  result_file_p = File.open('output/res/'+obj+'.res', 'w+')
 
   #result_file.write('BODY: '+body['name']+"\n")
   j_filename = 'mercury/JUPITER.aei'
@@ -94,6 +95,8 @@ def calc(filename, resonance)
     #ss = time.to_s+' '+m_longitude.to_s+' '+mean_motion.to_s+"\n"
     ss = sprintf("%12f %12f %12f %12f %12f %12f %12f\n", datas[0], angle, datas[4], datas[5], j_datas[1], s_datas[1], datas[1])
     result_file.write(ss)
+    result_file_p.write(ss)
+
     if false
     if (counter < 20)
       previous.push(angle)
@@ -106,6 +109,7 @@ def calc(filename, resonance)
       #ss = sprintf("%6f %6f %6f\n", medium_time/10.0, medium_angle/10.0, datas[4])
       ss = sprintf("%6f %6f %6f\n", datas[0], medium_value, datas[4])
       result_file.write(ss)
+      result_file_p.write(ss)
       
       medium_value = 0
     end
@@ -114,6 +118,7 @@ def calc(filename, resonance)
   end
 
   result_file.close
+  result_file_p.close
 
 end
 
@@ -147,7 +152,7 @@ objects = [ ['A982',   [3.0, -2.0, -1.0, 0, 0, 0.0]],
 
 objects.each do |elem|
   obj = elem[0]
-  calc('mercury/'+obj+'.aei', elem[1])
+  calc('mercury/'+obj+'.aei', elem[1], obj)
   `gnuplot output/angle.gnu > output/png/angle#{obj}.png`
   `gnuplot output/axe.gnu > output/png/axe#{obj}.png`
   `gnuplot output/multi.gnu > output/png/multi#{obj}.png`

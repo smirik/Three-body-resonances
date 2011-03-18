@@ -3,20 +3,23 @@ program resonances
   implicit none
   
   character(len=200) :: a
-  character(len=200) :: format
+  character(len=200) :: format, catalog_file
   real, dimension(9) :: data_j, data_s, data_a ! data from file for Jupiter, Saturn and the asteroid
   real, dimension(5) :: c_data_j, c_data_s, c_data_a ! corrected data from file for Jupiter, Saturn and the asteroid
   real, dimension(6) :: resonance ! array of resonance parameters
-  real :: tmp, tmp2
+  real :: tmp, tmp2, find_asteroid_by_number
   character(len=20) :: asteroid_name ! for asteroid naming
   integer :: i,j
 
   ! define the resonance
   resonance = (/ 5, -2, -2, 0, 0, 1 /)
   asteroid_name = 'mercury/A138.aei'
+
+  catalog_file = 'catalog/allnum.cat'
+  tmp = find_asteroid_by_number(1.0,catalog_file)
   
   ! result file
-  open(7, file = 'result', access = 'append', status = 'new')
+  open(7, file = 'result',action='write', status = 'replace')
   
   ! JUPITER and SATURN files
   open(8, file = 'mercury/JUPITER.aei', status = 'old')
@@ -39,9 +42,9 @@ program resonances
 
     ! count resonant argument
 
-    write (*, *) data_j
-    write (*, *) data_s
-    write (*, *) data_a
+    !write (*, *) data_j
+    !write (*, *) data_s
+    !write (*, *) data_a
   end do
   
   close(7)
