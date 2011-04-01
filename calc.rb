@@ -122,6 +122,11 @@ def calc(filename, resonance, obj)
 
 end
 
+puts mean_motion_from_axe(2.0)
+puts 3.0.to_deg
+puts 100.from_deg
+raise
+
 objects = [ ['A982',   [3.0, -2.0, -1.0, 0, 0, 0.0]],
             ['A138',   [7.0, -2.0, -2.0, 0, 0, -3.0]],
             ['A463',   [4.0, -2.0, -1.0, 0, 0, -1.0]],
