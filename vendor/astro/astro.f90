@@ -38,3 +38,15 @@ function mean_motion_from_axis(axis)
   k2 = 0.0002959122082855911025
   mean_motion_from_axis = sqrt(k2 / (axis**3))
 end function mean_motion_from_axis
+
+! mean longitude = longitude of periapsis + mean anomaly
+function mean_longitude_from_anomaly(p_longitude, mean_anomaly)
+  real (kind=8) :: p_longitude, mean_anomaly, mean_longitude_from_anomaly
+  write (*, *) 'SUM'
+  write (*, *) p_longitude, mean_anomaly
+  mean_longitude_from_anomaly = p_longitude + mean_anomaly
+end function mean_longitude_from_anomaly
+
+
+  
+  
