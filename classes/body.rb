@@ -1,4 +1,4 @@
-require 'classes/class.body_elements.rb'
+require 'classes/body_elements.rb'
 require 'classes/degrees.rb'
 
 class Body

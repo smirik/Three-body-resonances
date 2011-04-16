@@ -89,8 +89,3 @@ class Body
   
 end
 
-class Numeric
-  def to_grad
-    self*180.0/Math::PI
-  end
-end
