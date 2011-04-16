@@ -6,4 +6,5 @@ calc
 axis/*.o
 axis/axis
 output/png/*
+output/res/*
 input/mercury/*.in
