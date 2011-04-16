@@ -33,14 +33,6 @@ program resonances
   open(9, file = 'mercury/SATURN.aei', status = 'old')
   open(10, file = asteroid_name, status = 'old')
   
-  write (7, *) 'COOL'
-
-  write (*, *) 'RES'
-  axis = 2.0
-  tmp2 = mean_motion_from_axis(axis)
-  write (*, *) tmp2
-  write (*, *) 'END RES'
-
   read (8, '(a)', end=1) a,a,a,a
   read (9, '(a)', end=1) a,a,a,a
   read (10, '(a)', end=1) a,a,a,a

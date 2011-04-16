@@ -123,6 +123,7 @@ def calc(filename, resonance, obj)
 end
 
 puts mean_motion_from_axe(2.0)
+puts mean_motion_from_axe(1.4)
 puts 3.0.to_deg
 puts 100.from_deg
 raise

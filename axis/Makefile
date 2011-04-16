@@ -1,4 +1,5 @@
 main: main.o functions.o resonance_table.o
+  cd vendor/astro; make
 	gfortran -o axis main.o functions.o resonance_table.o
 
 functions.o: functions.f90  
@@ -6,7 +7,7 @@ functions.o: functions.f90
 
 resonance_table.o: resonance_table.f90
 	gfortran -c resonance_table.f90
-  
+
 main.o: main.f90
 	gfortran -c main.f90
 

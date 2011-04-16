@@ -1,6 +1,6 @@
 flags = -fbacktrace
 
-calc: calc.o mercury_parser.o vendor/strings/stringmod.o astdys.o
+calc: calc.o mercury_parser.o vendor/strings/stringmod.o astdys.o astro
 	gfortran -o calc calc.o mercury_parser.o  axis/functions.o vendor/strings/stringmod.o astdys.o vendor/astro/astro.o $(flags)
 
 mercury_parser.o: mercury_parser.f90
@@ -11,5 +11,9 @@ calc.o: calc.f90
 
 astdys.o: 
 	gfortran -c catalog/astdys.f90 $(flags)
+
+astro:
+	(cd vendor/astro; make)
+
 clean:
 	rm -f *.o calc result
