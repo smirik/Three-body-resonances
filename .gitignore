@@ -8,3 +8,4 @@ axis/axis
 output/png/*
 input/mercury/*.in
 *.res
+vendor/astro/astro_tests
