@@ -59,11 +59,11 @@ for i in 1..8
         # TeX
         if (asteroid.axis != 0)
           if (format == 'tex')
-            printf("%d & %d & %d & %d & %2.4f \\\\ \n", resonance[0], resonance[1], resonance[2], resonance[5].abs, asteroid.axis)
+            printf("%d & %d & %d & %d & %2.4f \\\\ \n", resonance[0], resonance[1], resonance[2], resonance[5], asteroid.axis)
           elsif (format == 'simple')
-            printf("%d %d %d %d %2.4f \n", resonance[0], resonance[1], resonance[2], resonance[5].abs, asteroid.axis)
+            printf("%d %d %d 0 0 %d %2.4f \n", resonance[0], resonance[1], resonance[2], resonance[5], asteroid.axis)
           else
-            printf("%d %d %d %d %2.4f \n", resonance[0], resonance[1], resonance[2], resonance[5].abs, asteroid.axis)
+            printf("%d %d %d 0 0 %d %2.4f \n", resonance[0], resonance[1], resonance[2], resonance[5], asteroid.axis)
           end
         end
       end

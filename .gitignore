@@ -7,4 +7,5 @@ axis/*.o
 axis/axis
 output/png/*
 output/res/*
+output/gnu/*
 input/mercury/*.in

@@ -10,6 +10,11 @@ class Body
     @mean_motion = Math.sqrt(CONFIG['constants']['k2'] / (@axis**3))
   end
   
+  def self.mean_motion_from_axis(axe)
+    mean_motion = Math.sqrt(0.0002959122082855911025 / (axe**3))
+    mean_motion
+  end
+  
   def axis_from_mean_motion()
     @axis = (CONFIG['constants']['k'] / (@mean_motion))**(2.0/3)
   end

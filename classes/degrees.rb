@@ -23,6 +23,21 @@ class Numeric
   def to_grad
     self*180.0/Math::PI
   end
+
+  def by_mod
+    l = self
+    if (l > Math::PI)
+      while (l > Math::PI)
+        l = l - 2*Math::PI
+      end
+    else
+      while (l < -Math::PI)
+        l = l + 2*Math::PI
+      end
+    end
+    l
+  end
+
   
 end
 

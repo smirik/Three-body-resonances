@@ -11,6 +11,28 @@ catalog:
   astdys:
     skip: 6
 
+integrator:
+  type: mercury6
+  input: input/mercury
+  
+  files:
+    small_bodies: small.in
+
+  start: 2455400.5
+  
+  number_of_bodies: 100
+
+resonance:
+  
+  axis_error: 0.02
+  output:
+    angle: output/res
+
+gnuplot:
+  x_stop: 10000
+  type:   points
+  
+
 constants:
   u:  0.0002959122082855911025
   k:  0.017202098795
