@@ -19,7 +19,7 @@ integrator:
     small_bodies: small.in
 
   start: 2455400.5
-  
+  step:  3650.25
   number_of_bodies: 100
 
 resonance:
@@ -28,8 +28,11 @@ resonance:
   output:
     angle: output/res
 
+  libration:
+    min: 10000
+
 gnuplot:
-  x_stop: 10000
+  x_stop: 100000
   type:   points
   
 
