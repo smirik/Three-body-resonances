@@ -16,6 +16,9 @@ steps = steps.to_i
 puts "Start"
 for i in 0..steps
   num = start + 100*i
-  tmp = %x[ ruby resonance.rb --start=#{num}  --integrate=1; ruby packager.rb --start=#{num} --zip=1 ]
+  puts "Start from #{num} "
+  tmp = %x[ ruby resonance.rb --start=#{num}  --integrate=1 ]
+  puts "Package results for #{num}"
+  tmp = %x[ ruby packager.rb --start=#{num} --zip=1 ]
 end
 puts "End"

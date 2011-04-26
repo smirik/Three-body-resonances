@@ -30,7 +30,7 @@ class ResonanceDatabase
   end
   
   def add(body_number, resonance, type = 1)  
-    if self.check?(body_number)
+    if !self.check?(body_number)
       File.open(@db_file, 'a+') do |db|
         db.puts(body_number.to_s+';'+type.to_s+';'+resonance.inspect)
       end
