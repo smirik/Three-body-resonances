@@ -12,7 +12,6 @@ if (!defined? CONFIG)
 end
 
 start  = get_command_line_argument('start', false)
-action = get_command_line_argument('action', false)
 elements = get_command_line_argument('elements', false)
 
 if (!start)
@@ -24,10 +23,21 @@ end
 
 num_b      = CONFIG['integrator']['number_of_bodies']
 export_dir = CONFIG['export']['base_dir']+'/'+start.to_s+'-'+(start+num_b).to_s
+tar_file   = 'integration'+start.to_s+'-'+(start+num_b).to_s+'.tar.gz' 
+export_tar = CONFIG['export']['base_dir']+'/'+tar_file
 
 if (!File.exists?(export_dir))
   puts '[fail]'.to_red+' Export directory not exists.'
-  exit
+  print "Trying to find archive and extract... "
+  STDOUT.flush
+  
+  if (File.exists?(export_tar))
+    tmp = %x[ cd #{CONFIG['export']['basedir']}; tar -xf #{tar_file}; cd ../  ]
+    print "[done]\n".to_green
+  else
+    print "[fail]\n".to_red
+    exit
+  end
 end
 
 # Clean integrator directory
