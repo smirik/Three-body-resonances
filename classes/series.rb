@@ -21,6 +21,7 @@ class Series
     p_break  = 0
     pp_break = 0
     File.open(file).each do |line|
+      
       data = line.split(' ').map{|x| x.strip.to_f}
       data[1] = (data[1]+Math::PI).by_mod if transport
       if (previous && ((previous - data[1]).abs >= Math::PI) )

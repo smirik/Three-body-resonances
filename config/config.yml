@@ -30,6 +30,18 @@ resonance:
 
   libration:
     min: 10000
+  
+  db_file: export/resonances.db
+
+export:
+  base_dir: export
+  structure:
+    - aei
+    - mercury
+    - res
+    - png
+    - resonances
+    - gnu
 
 gnuplot:
   x_stop: 100000

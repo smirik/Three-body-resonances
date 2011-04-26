@@ -9,3 +9,4 @@ output/png/*
 output/res/*
 output/gnu/*
 input/mercury/*.in
+export

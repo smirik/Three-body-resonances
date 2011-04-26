@@ -2,6 +2,7 @@ require 'yaml'
 require 'catalog/astdys.rb'
 require 'mercury/mercury6.rb'
 require 'classes/functions.rb'
+require 'classes/resonance_database.rb'
 require 'classes/series.rb'
 require 'classes/view.rb'
 require 'axis/finder.rb'
@@ -10,14 +11,14 @@ if (!defined? CONFIG)
   CONFIG = YAML.load_file('config/config.yml')
 end
 
-integrate = get_command_line_argument('integrate')
-plot      = get_command_line_argument('plot')
+integrate = get_command_line_argument('integrate', false)
+plot      = get_command_line_argument('plot', false)
 start     = get_command_line_argument('start', 1).to_i
 
 debug = CONFIG['debug']
 debug = false
 
-Mercury6.createSmallBodyFile if integrate
+Mercury6.createSmallBodyFile
 
 axis_error = CONFIG['resonance']['axis_error']
 resonances = Array.new
@@ -46,6 +47,9 @@ if (integrate)
 end
 
 # Create result files, gnuplot files and png
+
+rdb = ResonanceDatabase.new
+
 num_b.times do |i|
   if (resonances[i])
     if (debug)
@@ -55,14 +59,17 @@ num_b.times do |i|
     has_circulation = Series.findCirculation(offset+i, 0, CONFIG['gnuplot']['x_stop'], false, true)
     if (!has_circulation)
       puts "FOUND resonance for asteroid #{offset+i} — #{resonances[i].inspect}"
+      rdb.add(offset+i, resonances[i], 1)
     else
       if has_circulation[1]
         puts "MIXED type of resonance #{resonances[i].inspect} for asteroid #{offset+i} : period of circulation: #{has_circulation[2]}, percent of circulation: #{has_circulation[1]}" 
         puts "breaks = #{has_circulation[0].inspect}"
+        rdb.add(offset+i, resonances[i], 3)
       else
         transport_circulation = Series.findCirculation(offset+i, 0, CONFIG['gnuplot']['x_stop'], true, true)
         if (!transport_circulation)
           puts "FOUND resonance with transport PI for asteroid #{offset+i} — #{resonances[i].inspect}"
+          rdb.add(offset+i, resonances[i], 2)
         else
           puts "NOT FOUND resonance for asteroid #{offset+i}, NO libration" 
         end

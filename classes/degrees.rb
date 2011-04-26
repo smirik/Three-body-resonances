@@ -37,7 +37,5 @@ class Numeric
     end
     l
   end
-
   
 end
-
