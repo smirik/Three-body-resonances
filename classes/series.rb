@@ -73,4 +73,17 @@ class Series
     end
   end
   
+  def self.max(breaks)
+    p = 0
+    max = 0
+    breaks.push(CONFIG['gnuplot']['x_stop'])
+    breaks.each do |c|
+      if ((c - p) > max)
+        max = c-p
+      end
+      p = c
+    end
+    max
+  end
+  
 end

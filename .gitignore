@@ -8,5 +8,6 @@ axis/axis
 output/png/*
 output/res/*
 output/gnu/*
+output/png_res/*
 input/mercury/*.in
 export
