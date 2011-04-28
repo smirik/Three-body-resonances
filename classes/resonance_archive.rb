@@ -150,4 +150,21 @@ class ResonanceArchive
     true
   end
   
+  def self.copy_from_server(start, steps)
+    if (!start)
+      puts '[fail]'.to_red+' Specify please start value.'
+      return false
+    else
+      start = start.to_i
+    end
+
+    num_b      = CONFIG['integrator']['number_of_bodies']
+    
+    for i in 0..(steps-1)
+      from = start + num_b*i
+      to   = from + num_b
+      tmp = %x[ scp root@uranus:/root/resonances/export/integration#{from}-#{to}.tar.gz /Users/smirik/projects/resonances/export/ ]
+    end
+  end
+  
 end
