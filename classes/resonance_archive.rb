@@ -32,7 +32,7 @@ class ResonanceArchive
     STDOUT.flush
     tmp = %x[ cd mercury; ./simple_clean.sh; cd ../ ]  
     print "[done]\n".to_green
-
+    
     # Copy integrator files to integrator directory
     print "Copy integrator files... "
     STDOUT.flush
@@ -167,4 +167,29 @@ class ResonanceArchive
     end
   end
   
+  def self.calc_resonances(start)
+    num_b = CONFIG['integrator']['number_of_bodies']
+    
+    rdb = ResonanceDatabase.new
+    asteroids = rdb.find_between(start.to_i, start.to_i+num_b)
+    
+    # Extract from archive data
+    is_extracted = ResonanceArchive.extract(start, 1)
+
+    asteroids.each do |asteroid|
+      asteroid_num = asteroid[0]
+      puts "Plot for asteroid #{asteroid_num}"
+      Mercury6.calc(asteroid_num, asteroid[2])
+      has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
+      if (has_circulation)
+        max = Series.max(has_circulation[0])
+        puts "% = #{has_circulation[1]}%, medium period = #{has_circulation[2]}, max = #{max}"
+      else
+        puts "pure resonance"
+      end
+      View.createGnuplotFile(asteroid_num)
+      tmp = %x[ gnuplot output/gnu/A#{asteroid_num}.gnu > output/png_res/A#{asteroid_num}.png ]
+    end
+    
+  end  
 end

@@ -10,24 +10,26 @@ require 'classes/view.rb'
 require 'axis/finder.rb'
 
 start  = get_command_line_argument('start', false)
+stop   = get_command_line_argument('stop',  false)
+
+num_b = CONFIG['integrator']['number_of_bodies']
+
+if (!stop)
+  stop = start.to_i + num_b
+end
 
 rdb = ResonanceDatabase.new
-asteroids = rdb.find_between(start.to_i, start.to_i+CONFIG['integrator']['number_of_bodies'])
+asteroids = rdb.find_between(start.to_i, stop.to_i)
 
-# Extract from archive data
-is_extracted = ResonanceArchive.extract(start, 1)
+# Divide by num_b
+min = asteroids[0][0]
+max = asteroids[asteroids.size-1][0]
 
-asteroids.each do |asteroid|
-  asteroid_num = asteroid[0]
-  puts "Plot for asteroid #{asteroid_num}"
-  Mercury6.calc(asteroid_num, asteroid[2])
-  has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
-  if (has_circulation)
-    max = Series.max(has_circulation[0])
-    puts "% = #{has_circulation[1]}%, medium period = #{has_circulation[2]}, max = #{max}"
-  else
-    puts "pure resonance"
-  end
-  View.createGnuplotFile(asteroid_num)
-  tmp = %x[ gnuplot output/gnu/A#{asteroid_num}.gnu > output/png_res/A#{asteroid_num}.png ]
+number_of_steps = ((max - max%num_b + num_b) - (min - min%num_b))/num_b - 1
+start_base = (min - min%num_b)
+
+for i in 0..number_of_steps
+  start_from = start_base + i*num_b
+  ResonanceArchive.calc_resonances(start_from)
 end
+

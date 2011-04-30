@@ -27,3 +27,12 @@ def get_command_line_argument(name, default = false)
   default
 end
 
+def hash_resonance(resonance)
+  i = 0 
+  res = ''
+  resonance.each do |elem|
+    res+=elem.to_i.to_s if (i<6)
+    i+=1
+  end
+  res
+end
