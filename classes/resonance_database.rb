@@ -13,7 +13,6 @@ class ResonanceDatabase
   
   def create
     File.open(@db_file, "w" ) do |file|
-      file.puts " "
     end
   end
   
@@ -33,6 +32,13 @@ class ResonanceDatabase
     false
   end
   
+  def checkString?(ss)
+    File.open(@db_file, 'r').each do |line|
+      return true if (line.include?(ss))
+    end
+    false
+  end
+  
   def add(body_number, resonance, type = 1)  
     if !self.check?(body_number)
       File.open(@db_file, 'a+') do |db|
@@ -45,8 +51,12 @@ class ResonanceDatabase
   end
   
   def addString(ss)
-    File.open(@db_file, 'a+') do |db|
-      db.puts(string)
+    tmp = ss.split(';')
+    s = tmp[0].to_s+';'+tmp[1].to_s
+    if (!self.checkString?(s))
+      File.open(@db_file, 'a+') do |db|
+        db.puts(ss) 
+      end
     end
   end
   

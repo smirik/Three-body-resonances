@@ -11,9 +11,11 @@ require 'axis/finder.rb'
 
 start  = get_command_line_argument('start', false)
 stop   = get_command_line_argument('stop',  false)
+plot   = get_command_line_argument('plot',  false)
 
-start = start.to_i
-stop  = stop.to_i
+start = start.to_i if start
+stop  = stop.to_i if stop
+plot  = plot.to_i if plot
 
 num_b = CONFIG['integrator']['number_of_bodies']
 
@@ -36,31 +38,41 @@ end
 
 number_of_steps = (stop-start)-1
 
-rdb = ResonanceDatabase.new('full.db')
+rdb = ResonanceDatabase.new('export/full.db')
 
 # Extract from archive data
-#is_extracted = ResonanceArchive.extract(start, 1)
+is_extracted = ResonanceArchive.extract(start, 1)
 
 for i in 0..number_of_steps
   asteroid_num = start + i
   if (resonances[i])
     resonances[i].each do |resonance|
-      puts "Plot for asteroid #{asteroid_num}"
+      has_resonance = false
+      puts "Check asteroid #{asteroid_num}"
       Mercury6.calc(asteroid_num, resonance)
       has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
       hash_r = hash_resonance(resonance)
       if (has_circulation)
-        max = Series.max(has_circulation[0])
-        puts "% = #{has_circulation[1]}%, medium period = #{has_circulation[2]}, max = #{max}, resonance = #{resonance.inspect}"
-        s = asteroid_num.to_s+';'+resonance.inspect+';2'+has_circulation[2].to_s+';'+max.to_s
-        rdb.addString(s)
+        if (has_circulation[1])
+          max = Series.max(has_circulation[0])
+          puts "% = #{has_circulation[1]}%, medium period = #{has_circulation[2]}, max = #{max}, resonance = #{resonance.inspect}"
+          s = asteroid_num.to_s+';'+resonance.inspect+';2'+has_circulation[2].to_s+';'+max.to_s
+          rdb.addString(s)
+          has_resonance = true
+        else
+          max = Series.max(has_circulation[0])
+          puts "NO RESONANCE, resonance = #{resonance.inspect}, max=#{max}"
+        end
       else
-        puts "pure resonance"
+        puts "pure resonance #{resonance.inspect}"
         s = asteroid_num.to_s+';'+resonance.inspect+';1'
         rdb.addString(s)
+        has_resonance = true
       end
-      View.createGnuplotFile(asteroid_num)
-      tmp = %x[ gnuplot output/gnu/A#{asteroid_num}.gnu > output/png_res/A#{asteroid_num}-#{hash_r}.png ]
+      if ((plot == 2) || ((plot==1) && has_resonance))
+        View.createGnuplotFile(asteroid_num)
+        tmp = %x[ gnuplot output/gnu/A#{asteroid_num}.gnu > output/png_res/A#{asteroid_num}-#{hash_r}.png ]
+      end
     end
   end
 end

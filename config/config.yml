@@ -29,7 +29,7 @@ resonance:
     angle: output/res
 
   libration:
-    min: 20000
+    min: 15000
   
   db_file: export/resonances.db
 
