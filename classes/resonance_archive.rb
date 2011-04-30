@@ -47,6 +47,19 @@ class ResonanceArchive
     end
     true
   end
+  
+  def self.clear(start)
+    if (!start)
+      puts '[fail]'.to_red+' Specify please start value.'
+      return false
+    else
+      start = start.to_i
+    end
+
+    num_b      = CONFIG['integrator']['number_of_bodies']
+    
+    tmp = %x[ cd export; rm -Rf #{start}-#{start+num_b} ]
+  end
     
   def self.package(start, action, res, aei, zip)
     if (!start)

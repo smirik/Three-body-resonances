@@ -41,7 +41,7 @@ number_of_steps = (stop-start)-1
 rdb = ResonanceDatabase.new('export/full.db')
 
 # Extract from archive data
-is_extracted = ResonanceArchive.extract(start, 1)
+#is_extracted = ResonanceArchive.extract(start, 1)
 
 for i in 0..number_of_steps
   asteroid_num = start + i
@@ -77,3 +77,4 @@ for i in 0..number_of_steps
   end
 end
 
+close = ResonanceArchive.clear(start)
