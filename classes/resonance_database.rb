@@ -77,8 +77,8 @@ class ResonanceDatabase
     if (line.include?(';'))
       arr = line.split(';')
       tmp = arr[0].to_i
-      resonance = arr[2].delete('[').delete(']').split(',').map{|x| x.to_f}
-      [tmp, arr[1].to_i, resonance]
+      resonance = arr[1].delete('[').delete(']').split(',').map{|x| x.to_f}
+      [tmp, arr[2].to_i, resonance]
     else
       false
     end

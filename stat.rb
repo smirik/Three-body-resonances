@@ -5,7 +5,7 @@ require 'classes/functions.rb'
 require 'classes/resonance_archive.rb'
 require 'classes/resonance_database.rb'
 
-rdb = ResonanceDatabase.new
+rdb = ResonanceDatabase.new('export/full.db')
 
 resonances = Hash.new
 
