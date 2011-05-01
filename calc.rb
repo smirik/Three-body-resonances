@@ -9,9 +9,10 @@ require 'classes/series.rb'
 require 'classes/view.rb'
 require 'axis/finder.rb'
 
-start  = get_command_line_argument('start', false)
-stop   = get_command_line_argument('stop',  false)
-plot   = get_command_line_argument('plot',  false)
+start   = get_command_line_argument('start',   false)
+stop    = get_command_line_argument('stop',    false)
+plot    = get_command_line_argument('plot',    false)
+no_extract = get_command_line_argument('no_extract', false)
 
 start = start.to_i if start
 stop  = stop.to_i if stop
@@ -41,7 +42,7 @@ number_of_steps = (stop-start)-1
 rdb = ResonanceDatabase.new('export/full.db')
 
 # Extract from archive data
-is_extracted = ResonanceArchive.extract(start, 1)
+is_extracted = ResonanceArchive.extract(start, 1) unless (no_extract)
 
 for i in 0..number_of_steps
   asteroid_num = start + i
@@ -49,7 +50,7 @@ for i in 0..number_of_steps
     resonances[i].each do |resonance|
       has_resonance = false
       puts "Check asteroid #{asteroid_num}"
-      Mercury6.calc(asteroid_num, resonance)
+      Mercury6.calc(asteroid_num, resonance) unless (no_extract)
       has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
       hash_r = hash_resonance(resonance)
       if (has_circulation)

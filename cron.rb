@@ -13,11 +13,15 @@ end
 start = start.to_i
 steps = steps.to_i
 
+num_b = CONFIG['integrator']['number_of_bodies']
+
 puts "Start"
 for i in 0..steps
   num = start + 100*i
   puts "Start from #{num} "
-  tmp = %x[ ruby resonance.rb --start=#{num}  --integrate=1 ]
+  tmp = %x[ ruby resonance.rb --start=#{num} --integrate=1 ]
+  puts "Write full resonance stat in export/full.db"
+  tmp = %x[ ruby calc.rb --start=#{num} --stop=#{num+num_b} --no_extract=1 --plot=1 ]
   puts "Package results for #{num}"
   tmp = %x[ ruby packager.rb --start=#{num} --zip=1 ]
 end
