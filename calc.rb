@@ -50,7 +50,7 @@ for i in 0..number_of_steps
     resonances[i].each do |resonance|
       has_resonance = false
       puts "Check asteroid #{asteroid_num}"
-      Mercury6.calc(asteroid_num, resonance) unless (no_extract)
+      Mercury6.calc(asteroid_num, resonance)
       has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
       hash_r = hash_resonance(resonance)
       if (has_circulation)
