@@ -17,7 +17,7 @@ num_b = CONFIG['integrator']['number_of_bodies']
 
 puts "Start"
 for i in 0..steps
-  num = start + 100*i
+  num = start + num_b*i
   stop_num = num+num_b-1
   puts "Start from #{num} "
   tmp = %x[ ruby resonance.rb --start=#{num} --integrate=1 ]
