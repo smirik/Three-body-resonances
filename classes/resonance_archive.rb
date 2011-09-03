@@ -27,19 +27,19 @@ class ResonanceArchive
       end
     end
 
-    # Clean integrator directory
-    print "Clean integrator directory... "
-    STDOUT.flush
-    tmp = %x[ cd mercury; ./simple_clean.sh; cd ../ ]  
-    print "[done]\n".to_green
-    
-    # Copy integrator files to integrator directory
-    print "Copy integrator files... "
-    STDOUT.flush
-    tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
-    print "[done]\n".to_green
-
     if (elements)
+      # Clean integrator directory
+      print "Clean integrator directory... "
+      STDOUT.flush
+      tmp = %x[ cd mercury; ./simple_clean.sh; cd ../ ]  
+      print "[done]\n".to_green
+
+      # Copy integrator files to integrator directory
+      print "Copy integrator files... "
+      STDOUT.flush
+      tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
+      print "[done]\n".to_green
+
       print "Creating aei files... "
       STDOUT.flush
       tmp = %x[ cd mercury; ./element6; cd ../ ]
@@ -180,14 +180,13 @@ class ResonanceArchive
     end
   end
   
-  def self.calc_resonances(start)
+  def self.calc_resonances(start, elements = 1)
     num_b = CONFIG['integrator']['number_of_bodies']
     
-    rdb = ResonanceDatabase.new
+    rdb = ResonanceDatabase.new('export/full.db')
     asteroids = rdb.find_between(start.to_i, start.to_i+num_b)
-    
     # Extract from archive data
-    is_extracted = ResonanceArchive.extract(start, 1)
+    is_extracted = ResonanceArchive.extract(start, elements)
 
     asteroids.each do |asteroid|
       asteroid_num = asteroid[0]

@@ -31,7 +31,7 @@ resonance:
   libration:
     min: 15000
   
-  db_file: export/resonances.db
+  db_file: export/full.db
 
 export:
   base_dir: export

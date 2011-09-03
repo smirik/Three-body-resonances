@@ -9,8 +9,9 @@ require 'classes/series.rb'
 require 'classes/view.rb'
 require 'axis/finder.rb'
 
-start  = get_command_line_argument('start', false)
-stop   = get_command_line_argument('stop',  false)
+start    = get_command_line_argument('start', false)
+stop     = get_command_line_argument('stop',  false)
+elements = get_command_line_argument('elements',  false)
 
 num_b = CONFIG['integrator']['number_of_bodies']
 
@@ -18,7 +19,7 @@ if (!stop)
   stop = start.to_i + num_b
 end
 
-rdb = ResonanceDatabase.new
+rdb = ResonanceDatabase.new('export/full.db')
 asteroids = rdb.find_between(start.to_i, stop.to_i)
 
 # Divide by num_b
@@ -30,6 +31,6 @@ start_base = (min - min%num_b)
 
 for i in 0..number_of_steps
   start_from = start_base + i*num_b
-  ResonanceArchive.calc_resonances(start_from)
+  ResonanceArchive.calc_resonances(start_from, elements)
 end
 

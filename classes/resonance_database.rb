@@ -66,7 +66,7 @@ class ResonanceDatabase
       arr = line.split(';')
       tmp = arr[0].to_i
       if ((tmp >= start) && (tmp < stop) )
-        resonance = arr[2].delete('[').delete(']').split(',').map{|x| x.to_f}
+        resonance = arr[1].delete('[').delete(']').split(',').map{|x| x.to_f}
         asteroids.push([arr[0].to_i, arr[1].to_i, resonance])
       end
     end
