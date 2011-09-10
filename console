@@ -1,0 +1,63 @@
+#!/usr/bin/ruby
+# Extract integrator files from archive
+require 'yaml'
+require 'catalog/astdys.rb'
+require 'mercury/mercury6.rb'
+require 'classes/colorize.rb'
+require 'commands/command.rb'
+require 'classes/functions.rb'
+require 'classes/asteroid.rb'
+require 'classes/resonance_archive.rb'
+require 'classes/resonance_database.rb'
+require 'classes/series.rb'
+require 'classes/view.rb'
+require 'axis/finder.rb'
+
+start    = get_command_line_argument('start', false)
+stop     = get_command_line_argument('stop',  false)
+
+action = false
+action = ARGV[0] if !ARGV.empty?
+
+if (!action)
+  print "[Warning]".to_red+' Please, specify action: '
+  action = gets.to_s
+end
+
+if (!start)
+  print "[Warning]".to_red+' Please, specify first object number: '
+  start  = gets.to_i
+end
+
+if (!stop)
+  stop = start + CONFIG['integrator']['number_of_bodies']
+end
+
+action.strip!
+
+case action
+when 'show'
+  puts 'show'
+when 'plot'
+  Command.plot(start.to_i, stop.to_i)
+  puts 'plot'
+else
+  puts 'else'
+end
+
+raise
+
+rdb = ResonanceDatabase.new('export/full.db')
+asteroids = rdb.find_between(start.to_i, stop.to_i)
+
+# Divide by num_b
+min = asteroids[0][0]
+max = asteroids[asteroids.size-1][0]
+
+number_of_steps = ((max - max%num_b + num_b) - (min - min%num_b))/num_b - 1
+start_base = (min - min%num_b)
+
+for i in 0..number_of_steps
+  start_from = start_base + i*num_b
+  ResonanceArchive.calc_resonances(start_from, elements)
+end

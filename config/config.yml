@@ -15,6 +15,8 @@ integrator:
   type: mercury6
   input: input/mercury
   
+  dir: mercury
+  
   files:
     small_bodies: small.in
 
@@ -23,15 +25,20 @@ integrator:
   number_of_bodies: 100
 
 resonance:
-  
   axis_error: 0.02
-  output:
-    angle: output/res
-
   libration:
     min: 15000
-  
   db_file: export/full.db
+  bodies:
+    - JUPITER
+    - SATURN
+
+output:
+  angle:   output/res
+  gnuplot: output/gnu
+  images:  output/images
+
+  format:  png
 
 export:
   base_dir: export
@@ -47,6 +54,11 @@ gnuplot:
   x_stop: 100000
   type:   points
   
+server:
+  username:   root
+  address:    uranus
+  source_dir: /root/resonances
+  dest_dir:   /Users/smirik/projects/resonances
 
 constants:
   u:  0.0002959122082855911025

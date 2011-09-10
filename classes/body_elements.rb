@@ -1,10 +1,11 @@
 class Body
   
-  attr_accessor :axis, :eccentricity, :parameter, :square_constant, :inclination,
-                :true_anomaly, :argument_of_periapsis, :g,
-                :eccentric_anomaly, :mean_anomaly, :longitude_node,
-                :ecliptic_longitude, :ecliptic_latitude, :argument_of_latitude, 
-                :mean_motion, :perihelion_longitude
+  # Kepler elements
+  attr_accessor :axis, :eccentricity, :inclination, :argument_of_periapsis, :longitude_node, :mean_anomaly
+  attr_accessor :longitude_of_periapsis, :mean_longitude
+  attr_accessor :parameter, :square_constant, :true_anomaly, :g,
+                :eccentric_anomaly, :ecliptic_longitude, :ecliptic_latitude, :argument_of_latitude, 
+                :mean_motion
 
   def mean_motion_from_axis()
     @mean_motion = Math.sqrt(CONFIG['constants']['k2'] / (@axis**3))
@@ -88,7 +89,7 @@ class Body
     @eccentric_anomaly = Math.acos((@eccentricity + Math.cos(@true_anomaly))/(1.0+@eccentricity*Math.cos(@true_anomaly)))
     @mean_anomaly = @eccentric_anomaly - @eccentricity*Math.sin(@eccentric_anomaly)
     
-    @perihelion_longitude = @perihelion_longitude + @argument_of_periapsis
+    @longitude_of_periapsis = @longitude_of_periapsis + @argument_of_periapsis
         
   end 
   

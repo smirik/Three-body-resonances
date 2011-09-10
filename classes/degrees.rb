@@ -17,13 +17,14 @@ class Numeric
   end
 
   def from_day_to_year()
-    self/365.2422
+    self/365.25
   end
 
   def to_grad
     self*180.0/Math::PI
   end
 
+  # Decrease / increase to [0, 2*Pi]
   def by_mod
     l = self
     if (l > Math::PI)

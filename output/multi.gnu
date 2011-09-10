@@ -28,16 +28,16 @@ plot 'result' using 1:4 lt -1 title '' with dots
 # Node
 set ylabel "node"
 set ytics format "%.0f" -100, 2.0, 100
-plot 'result' using 1:13 lt -1 title '' with dots
+plot 'result' using 1:6 lt -1 title '' with dots
 # Node
 set ylabel "w"
 set ytics format "%.0f" -100, 2.0, 100
-plot 'result' using 1:8 lt -1 title '' with dots
+plot 'result' using 1:7 lt -1 title '' with dots
 # Inclination
 set ylabel "i"
 set ytics format "%.2f" -100, 0.02, 100
 set xlabel "Время"
 set xtics 0, 20000, 100000 format "%2.0f"
-plot 'result' using 1:12 lt -1 title '' with dots
+plot 'result' using 1:4 lt -1 title '' with dots
 # On some terminals, nothing gets plotted until this command is issued
 unset multiplot

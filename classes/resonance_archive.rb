@@ -1,4 +1,8 @@
 class ResonanceArchive
+  
+  # Extract resonance file from archive to directory in export folder
+  # start — first object number for extracting (start + number of bodies)
+  # elements — should mercury6 create aei files for all objects?
   def self.extract(start, elements)
     
     if (!start)
@@ -7,14 +11,18 @@ class ResonanceArchive
     else
       start = start.to_i
     end
-
-    num_b      = CONFIG['integrator']['number_of_bodies']
+    
+    # Start should have 0 remainder to number of bodies because of structure
+    num_b      = CONFIG['integrator']['number_of_bodies'].to_i
+    
+    start = start - start%num_b
+    
     export_dir = CONFIG['export']['base_dir']+'/'+start.to_s+'-'+(start+num_b).to_s
     tar_file   = 'integration'+start.to_s+'-'+(start+num_b).to_s+'.tar.gz' 
     export_tar = CONFIG['export']['base_dir']+'/'+tar_file
 
     if (!File.exists?(export_dir))
-      puts '[fail]'.to_red+' Export directory not exists.'
+      puts '[fail]'.to_red+' Directory '+export_dir.to_s+' directory not exists.'
       print "Trying to find archive and extract... "
       STDOUT.flush
   
@@ -26,15 +34,17 @@ class ResonanceArchive
         return false
       end
     end
+    
+    # Check aei files in mercury directory
+    # @todo diff integrators
+    aei_filename = CONFIG['integrator']['dir']+'/A'+start.to_s+'.aei'
 
-    if (elements)
-      # Clean integrator directory
+    if (elements || !File.exists?(aei_filename))
       print "Clean integrator directory... "
       STDOUT.flush
-      tmp = %x[ cd mercury; ./simple_clean.sh; cd ../ ]  
+      tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./simple_clean.sh; cd ../ ]  
       print "[done]\n".to_green
 
-      # Copy integrator files to integrator directory
       print "Copy integrator files... "
       STDOUT.flush
       tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
@@ -42,12 +52,13 @@ class ResonanceArchive
 
       print "Creating aei files... "
       STDOUT.flush
-      tmp = %x[ cd mercury; ./element6; cd ../ ]
+      tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./element6; cd ../ ]
       print "[done]\n".to_green
     end
     true
   end
   
+  # Clear data directory for given start value (e.g. export/2000-2100)
   def self.clear(start)
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
@@ -57,10 +68,15 @@ class ResonanceArchive
     end
 
     num_b      = CONFIG['integrator']['number_of_bodies']
-    
-    tmp = %x[ cd export; rm -Rf #{start}-#{start+num_b} ]
+    tmp = %x[ cd #{CONFIG['export']['base_dir']}; rm -Rf #{start}-#{start+num_b} ]
   end
     
+  # Create package (tar.gz archive) based on current mercury6 data
+  # start: first object number
+  # action: what to do. If "clean" specified then export directory for current data will be removed
+  # res: copy res, gnu, png files or not
+  # aei: copy aei files or not
+  # zip: archive with tar?
   def self.package(start, action, res, aei, zip)
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
@@ -77,7 +93,8 @@ class ResonanceArchive
     offset = start
 
     export_base_dir = CONFIG['export']['base_dir']
-    export_dir = export_base_dir+'/'+start.to_s+'-'+(start+num_b).to_s
+    export_dir      = export_base_dir+'/'+start.to_s+'-'+(start+num_b).to_s
+    integrator_dir  = CONFIG['integrator']['dir']
 
     if (action == 'clean')
       if (File.exists?(export_dir))
@@ -106,9 +123,9 @@ class ResonanceArchive
     tmp = %x[ mkdir #{export_dir} ]
     print "[done]\n".to_green
 
+    # Creating structure directory
     print "Creating subdirectories... "
     STDOUT.flush
-    # Creating structure directory
     structure = CONFIG['export']['structure']
     structure.each do |dir|
       tmp_dir = export_dir+'/'+dir
@@ -119,23 +136,23 @@ class ResonanceArchive
     if (aei)  
       # Copy files from integrator and output
       # Copy aei files
-      print "Copy aei files... "
+      print "Copy aei files..."
       STDOUT.flush
-      tmp = %x[ cp mercury/*.aei #{export_dir}/aei ]  
+      tmp = %x[ cp #{integrator_dir}/*.aei #{export_dir}/aei ]  
       print "[done]\n".to_green
     end
 
     # Copy dmp & tmp files
     print "Copy dmp and tmp files... "
     STDOUT.flush
-    tmp = %x[ cp mercury/*.dmp #{export_dir}/mercury ]  
-    tmp = %x[ cp mercury/*.tmp #{export_dir}/mercury ]  
+    tmp = %x[ cp #{integrator_dir}/*.dmp #{export_dir}/mercury ]  
+    tmp = %x[ cp #{integrator_dir}/*.tmp #{export_dir}/mercury ]  
     print "[done]\n".to_green
 
     # Copy out files
     print "Copy out files... "
     STDOUT.flush
-    tmp = %x[ cp mercury/*.out #{export_dir}/mercury ]  
+    tmp = %x[ cp #{integrator_dir}/*.out #{export_dir}/mercury ]  
     print "[done]\n".to_green
 
     if (res)
@@ -163,6 +180,9 @@ class ResonanceArchive
     true
   end
   
+  # Copy archive files from server via ssh (scp)
+  # start: specify first object number
+  # steps: specify number of intervals [start, start+number_of_bodies]
   def self.copy_from_server(start, steps)
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
@@ -172,26 +192,42 @@ class ResonanceArchive
     end
 
     num_b      = CONFIG['integrator']['number_of_bodies']
+    export_dir = CONFIG['export']['base_dir']
+    username   = CONFIG['server']['username']
+    address    = CONFIG['server']['address']
+    source_dir = CONFIG['server']['source_dir']
+    dest_dir   = CONFIG['server']['dest_dir']
     
     for i in 0..(steps-1)
+      puts "Copy #{from} to #{to}"
       from = start + num_b*i
       to   = from + num_b
-      tmp = %x[ scp root@uranus:/root/resonances/export/integration#{from}-#{to}.tar.gz /Users/smirik/projects/resonances/export/ ]
+      tmp  = %x[ scp #{username}@#{address}:#{source_dir}/#{export_dir}/integration#{from}-#{to}.tar.gz #{dest_dir}/export/ ]
     end
   end
   
-  def self.calc_resonances(start, elements = 1)
+  # Calculate resonances and plot the png files for given object
+  def self.calc_resonances(start, stop = false, elements = 1)
     num_b = CONFIG['integrator']['number_of_bodies']
     
+    output_gnu    = CONFIG['output']['gnuplot']
+    output_images = CONFIG['output']['images']
+    
     rdb = ResonanceDatabase.new('export/full.db')
-    asteroids = rdb.find_between(start.to_i, start.to_i+num_b)
+    
+    if (!stop)
+      stop = start.to_i + num_b
+    end
+    
+    asteroids = rdb.find_between(start, stop)
+    
     # Extract from archive data
     is_extracted = ResonanceArchive.extract(start, elements)
 
     asteroids.each do |asteroid|
-      asteroid_num = asteroid[0]
+      asteroid_num = asteroid.number.to_s
       puts "Plot for asteroid #{asteroid_num}"
-      Mercury6.calc(asteroid_num, asteroid[2])
+      Mercury6.calc(asteroid_num, asteroid.resonance)
       has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
       if (has_circulation)
         max = Series.max(has_circulation[0])
@@ -200,7 +236,7 @@ class ResonanceArchive
         puts "pure resonance"
       end
       View.createGnuplotFile(asteroid_num)
-      tmp = %x[ gnuplot output/gnu/A#{asteroid_num}.gnu > output/png_res/A#{asteroid_num}.png ]
+      tmp = %x[ gnuplot #{output_gnu}/A#{asteroid_num}.gnu > #{output_images}/A#{asteroid_num}.png ]
     end
     
   end  
