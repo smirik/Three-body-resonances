@@ -20,4 +20,17 @@ class Command
     
   end
   
+  def self.calc_mass(start, stop)
+    num_b = CONFIG['integrator']['number_of_bodies']
+    diff  = stop-start
+    steps = (diff-diff%num_b)/num_b
+    
+    steps.times do |i|
+      c_start = start+i*num_b
+      `./console calc --start=#{start}`
+      `./console find --start=#{start} --current=1`
+      `./console package --start=#{start} --zip=1`
+    end
+  end
+  
 end

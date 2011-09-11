@@ -7,6 +7,7 @@ require 'commands/find.rb'
 require 'commands/calc.rb'
 require 'commands/resonance_show.rb'
 require 'commands/mediana.rb'
+require 'commands/resonances.rb'
 
 class Command
 end

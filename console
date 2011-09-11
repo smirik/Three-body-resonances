@@ -72,6 +72,9 @@ when 'find'
 when 'calc'
   Command.calc(start)
 
+when 'calc-mass'
+  Command.calc_mass(start, stop)
+
 when 'resonance-show'
   resonance = get_command_line_argument('resonance', false)
   resonance = resonance.delete('[').delete(']').split(',').map{|x| x.to_f}
@@ -79,10 +82,16 @@ when 'resonance-show'
 
 when 'mediana'
   Command.mediana(start)
-  
+
+when 'resonances'
+  Command.resonances(start, stop)
+
+when 'mediana-mass'
+  Command.mediana_mass(start, stop)
+
+when 'complex'
+
 else
   puts 'Specify command'
 
 end
-
-puts "done".to_green

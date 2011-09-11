@@ -5,6 +5,8 @@ class ResonanceArchive
   # elements — should mercury6 create aei files for all objects?
   def self.extract(start, elements = false)
     
+    debug = CONFIG['debug']
+    
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
       return false
@@ -22,33 +24,33 @@ class ResonanceArchive
     export_tar = CONFIG['export']['base_dir']+'/'+tar_file
 
     if (!File.exists?(export_dir))
-      puts '[fail]'.to_red+' Directory '+export_dir.to_s+' directory not exists.'
-      print "Trying to find archive and extract... "
+      puts '[fail]'.to_red+' Directory '+export_dir.to_s+' directory not exists.' if debug
+      print "Trying to find archive and extract... " if debug
       STDOUT.flush
   
       if (File.exists?(export_tar))
         tmp = %x[ cd #{CONFIG['export']['base_dir']}; tar -xf #{tar_file}; cd ../  ]
-        print "[done]\n".to_green
+        print "[done]\n".to_green if debug
         STDOUT.flush
       else
-        print "[fail]\n".to_red
+        print "[fail]\n".to_red if debug
         STDOUT.flush
         return false
       end
     end
     
     if (elements)
-      print "Clean integrator directory... "
+      print "Clean integrator directory... " if debug
       STDOUT.flush
       tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./simple_clean.sh; cd ../ ]  
       print "[done]\n".to_green
 
-      print "Copy integrator files... "
+      print "Copy integrator files... " if debug
       STDOUT.flush
       tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
       print "[done]\n".to_green
 
-      print "Creating aei files... "
+      print "Creating aei files... " if debug
       STDOUT.flush
       tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./element6; cd ../ ]
       print "[done]\n".to_green
@@ -58,23 +60,23 @@ class ResonanceArchive
     # @todo diff integrators
     aei_filename = CONFIG['integrator']['dir']+'/A'+start.to_s+'.aei'
     if (!elements && !File.exists?(aei_filename))
-      print "Copy integrator files... "
+      print "Copy integrator files... " if debug
       STDOUT.flush
       tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
-      print "[done]\n".to_green
+      print "[done]\n".to_green if debug
 
       # Copy aei files if exists
-      print "Copy aei files... "
+      print "Copy aei files... " if debug
       STDOUT.flush
       tmp = %x[ cp #{export_dir}/aei/* mercury/ ]  
-      print "done\n".to_green
+      print "done\n".to_green if debug
       
       if (!File.exists?(aei_filename))
         puts  "[Warning] ".to_red+' AEI files not found'
-        print "Creating aei files... "
+        print "Creating aei files... " if debug
         STDOUT.flush
         tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./element6; cd ../ ]
-        print "[done]\n".to_green
+        print "[done]\n".to_green if debug
       end
       
     end

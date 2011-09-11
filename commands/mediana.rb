@@ -14,4 +14,10 @@ class Command
     puts mediana.inspect
   end
   
+  def self.mediana_mass(start, stop)
+    asteroids_numbers = `./console resonances --start=#{start} --stop=#{stop}`
+    asteroids_numbers = asteroids_numbers.split("\n").map{|elem| elem.strip.to_i}
+    asteroids_numbers.each{|num| puts "#{num};"+`./console mediana --start=#{num}`}
+  end
+  
 end
