@@ -69,7 +69,16 @@ when 'find'
   
 when 'calc'
   Command.calc(start)
-  
+
+when 'resonance-show'
+  resonance = get_command_line_argument('resonance', false)
+  resonance = resonance.delete('[').delete(']').split(',').map{|x| x.to_f}
+  Command.resonance_show(resonance)
+
+when 'mediana'
+  element = get_command_line_argument('element', false)
+  Command.mediana(start)
+
 else
   puts 'Specify command'
 

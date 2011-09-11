@@ -98,4 +98,25 @@ class Series
     max
   end
   
+  def self.calc_mediana(body_number)
+    file = 'output/res/A'+body_number.to_s+'.res'
+    counter = 0
+    axis    = 0.0
+    ecc     = 0.0
+    inc     = 0.0
+    node    = 0.0
+    plon    = 0.0
+    File.open(file).each do |line|
+      data = line.split(' ').map{|x| x.strip.to_f}
+      counter+=1
+      axis+=data[2].to_f
+      ecc+= data[3].to_f
+      inc+= data[4].to_f
+      node+=data[5].to_f
+      plon+=data[6].to_f
+    end
+    [axis/counter, ecc/counter, inc/counter, node/counter, plon/counter]
+  end
+  
+  
 end

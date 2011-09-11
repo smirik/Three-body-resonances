@@ -91,7 +91,17 @@ class ResonanceDatabase
   
   # Find all asteroids in given resonance
   # resonance: resonance array
-  def find_asteroids_in_resonance(resonance)
+  def find_asteroids_in_resonance(c_resonance)
+    asteroids = Array.new
+    File.open(CONFIG['resonance']['db_file'], 'r').each do |line|
+      arr = line.split(';')
+      resonance = arr[1].gsub!('[', '').gsub!(']', '').split(', ').map{|elem| elem.to_f}
+      if ((resonance[0] == c_resonance[0]) && (resonance[1] == c_resonance[1]) && (resonance[2] == c_resonance[2]))
+        asteroid_num = arr[0].to_i
+        asteroids.push(Asteroid.new(asteroid_num, c_resonance))
+      end
+    end
+    asteroids
   end
   
   # parse one line of database file 

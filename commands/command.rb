@@ -5,6 +5,8 @@ require 'commands/rcopy.rb'
 require 'commands/stat.rb'
 require 'commands/find.rb'
 require 'commands/calc.rb'
+require 'commands/resonance_show.rb'
+require 'commands/mediana.rb'
 
 class Command
 end
