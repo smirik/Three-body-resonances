@@ -3,7 +3,7 @@ class ResonanceArchive
   # Extract resonance file from archive to directory in export folder
   # start — first object number for extracting (start + number of bodies)
   # elements — should mercury6 create aei files for all objects?
-  def self.extract(start, elements)
+  def self.extract(start, elements = false)
     
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
@@ -29,17 +29,15 @@ class ResonanceArchive
       if (File.exists?(export_tar))
         tmp = %x[ cd #{CONFIG['export']['base_dir']}; tar -xf #{tar_file}; cd ../  ]
         print "[done]\n".to_green
+        STDOUT.flush
       else
         print "[fail]\n".to_red
+        STDOUT.flush
         return false
       end
     end
     
-    # Check aei files in mercury directory
-    # @todo diff integrators
-    aei_filename = CONFIG['integrator']['dir']+'/A'+start.to_s+'.aei'
-
-    if (elements || !File.exists?(aei_filename))
+    if (elements)
       print "Clean integrator directory... "
       STDOUT.flush
       tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./simple_clean.sh; cd ../ ]  
@@ -55,6 +53,32 @@ class ResonanceArchive
       tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./element6; cd ../ ]
       print "[done]\n".to_green
     end
+    
+    # Check aei files in mercury directory
+    # @todo diff integrators
+    aei_filename = CONFIG['integrator']['dir']+'/A'+start.to_s+'.aei'
+    if (!elements && !File.exists?(aei_filename))
+      print "Copy integrator files... "
+      STDOUT.flush
+      tmp = %x[ cp #{export_dir}/mercury/* mercury/ ]  
+      print "[done]\n".to_green
+
+      # Copy aei files if exists
+      print "Copy aei files... "
+      STDOUT.flush
+      tmp = %x[ cp #{export_dir}/aei/* mercury/ ]  
+      print "done\n".to_green
+      
+      if (!File.exists?(aei_filename))
+        puts  "[Warning] ".to_red+' AEI files not found'
+        print "Creating aei files... "
+        STDOUT.flush
+        tmp = %x[ cd #{CONFIG['integrator']['dir']}; ./element6; cd ../ ]
+        print "[done]\n".to_green
+      end
+      
+    end
+    
     true
   end
   
@@ -85,7 +109,7 @@ class ResonanceArchive
       start = start.to_i
     end
 
-    num_b      = CONFIG['integrator']['number_of_bodies']
+    num_b = CONFIG['integrator']['number_of_bodies']
 
     # Finding possible resonances
     # Create initial file for integrator
@@ -183,15 +207,22 @@ class ResonanceArchive
   # Copy archive files from server via ssh (scp)
   # start: specify first object number
   # steps: specify number of intervals [start, start+number_of_bodies]
-  def self.copy_from_server(start, steps)
+  def self.copy_from_server(start, stop)
     if (!start)
       puts '[fail]'.to_red+' Specify please start value.'
       return false
     else
       start = start.to_i
     end
-
+    
     num_b      = CONFIG['integrator']['number_of_bodies']
+    
+    if (!stop)
+      stop = start + num_b
+    end
+    
+    steps = ((stop - start)/num_b).round
+
     export_dir = CONFIG['export']['base_dir']
     username   = CONFIG['server']['username']
     address    = CONFIG['server']['address']
@@ -199,9 +230,9 @@ class ResonanceArchive
     dest_dir   = CONFIG['server']['dest_dir']
     
     for i in 0..(steps-1)
-      puts "Copy #{from} to #{to}"
       from = start + num_b*i
       to   = from + num_b
+      puts "Copy #{from} to #{to}"
       tmp  = %x[ scp #{username}@#{address}:#{source_dir}/#{export_dir}/integration#{from}-#{to}.tar.gz #{dest_dir}/export/ ]
     end
   end

@@ -26,38 +26,53 @@ end
 
 if (!start)
   print "[Warning]".to_red+' Please, specify first object number: '
-  start  = gets.to_i
+  start  = gets
 end
+
+start = start.to_i
 
 if (!stop)
   stop = start + CONFIG['integrator']['number_of_bodies']
 end
+stop = stop.to_i
 
 action.strip!
 
 case action
+
 when 'show'
   puts 'show'
+  
 when 'plot'
-  Command.plot(start.to_i, stop.to_i)
+  Command.plot(start, stop)
   puts 'plot'
+
+when 'package'
+  clean = get_command_line_argument('clean', false)
+  res   = get_command_line_argument('res', false)
+  aei   = get_command_line_argument('aei', false)
+  zip   = get_command_line_argument('zip', false)
+  Command.package(start, clean, res, aei, zip)
+
+when 'extract'
+  Command.extract(start)
+  
+when 'rcopy'
+  Command.rcopy(start, stop)
+  
+when 'stat'
+  Command.stat
+ 
+when 'find'
+  current = get_command_line_argument('current', false)
+  Command.find(start, current)
+  
+when 'calc'
+  Command.calc(start)
+  
 else
-  puts 'else'
+  puts 'Specify command'
+
 end
 
-raise
-
-rdb = ResonanceDatabase.new('export/full.db')
-asteroids = rdb.find_between(start.to_i, stop.to_i)
-
-# Divide by num_b
-min = asteroids[0][0]
-max = asteroids[asteroids.size-1][0]
-
-number_of_steps = ((max - max%num_b + num_b) - (min - min%num_b))/num_b - 1
-start_base = (min - min%num_b)
-
-for i in 0..number_of_steps
-  start_from = start_base + i*num_b
-  ResonanceArchive.calc_resonances(start_from, elements)
-end
+puts "done".to_green

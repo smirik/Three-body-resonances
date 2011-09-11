@@ -1,5 +1,6 @@
 catalog/*.cat
 vendor
+export*
 *.o
 result
 calc
