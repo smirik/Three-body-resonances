@@ -94,7 +94,7 @@ constants:
     - 0.0
     - 109256.679
     - 43995.910    
-  perihelion_longitude:
+  longitude_of_periapsis:
     - 0.0
     - 0.0
     - 0.0
