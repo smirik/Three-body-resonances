@@ -13,6 +13,8 @@ require 'classes/series.rb'
 require 'classes/view.rb'
 require 'axis/finder.rb'
 
+num_b = CONFIG['integrator']['number_of_bodies']
+
 start    = get_command_line_argument('start', false)
 stop     = get_command_line_argument('stop',  false)
 
@@ -76,9 +78,8 @@ when 'resonance-show'
   Command.resonance_show(resonance)
 
 when 'mediana'
-  element = get_command_line_argument('element', false)
   Command.mediana(start)
-
+  
 else
   puts 'Specify command'
 
