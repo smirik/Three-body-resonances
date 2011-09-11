@@ -27,14 +27,17 @@ jupiter  = Body.new
 saturn   = Body.new
 asteroid = Body.new 
 
-jupiter.axis = CONFIG['constants']['axis'][5]
-saturn.axis  = CONFIG['constants']['axis'][6]
+body1 = CONFIG['resonance']['bodies_numbers'][0]
+body2 = CONFIG['resonance']['bodies_numbers'][1]
 
-jupiter.mean_motion = CONFIG['constants']['mean_motion'][5].from_sec.from_day_to_year
-saturn.mean_motion  = CONFIG['constants']['mean_motion'][6].from_sec.from_day_to_year
+jupiter.axis = CONFIG['constants']['axis'][body1]
+saturn.axis  = CONFIG['constants']['axis'][body2]
 
-jupiter.longitude_of_periapsis = CONFIG['constants']['longitude_of_periapsis'][5].from_sec.from_day_to_year
-saturn.longitude_of_periapsis  = CONFIG['constants']['longitude_of_periapsis'][6].from_sec.from_day_to_year
+jupiter.mean_motion = CONFIG['constants']['mean_motion'][body1].from_sec.from_day_to_year
+saturn.mean_motion  = CONFIG['constants']['mean_motion'][body2].from_sec.from_day_to_year
+
+jupiter.longitude_of_periapsis = CONFIG['constants']['longitude_of_periapsis'][body1].from_sec.from_day_to_year
+saturn.longitude_of_periapsis  = CONFIG['constants']['longitude_of_periapsis'][body2].from_sec.from_day_to_year
 
 format = CONFIG['resonance_table']['format']
 

@@ -32,6 +32,9 @@ resonance:
   bodies:
     - JUPITER
     - SATURN
+  bodies_numbers:
+    - 5
+    - 6
 
 output:
   angle:   output/res
