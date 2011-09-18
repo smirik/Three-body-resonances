@@ -59,4 +59,16 @@ class Command
     
   end
   
+  def self.find_mass(start, stop)
+    num_b = CONFIG['integrator']['number_of_bodies']
+    diff  = stop-start
+    steps = (diff-diff%num_b)/num_b
+    
+    steps.times do |i|
+      c_start = start+i*num_b
+      puts `./console find --start=#{c_start}`
+      `rm -f output/res/*.res`
+    end
+  end
+  
 end

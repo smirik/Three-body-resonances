@@ -1,5 +1,6 @@
 catalog/*.cat
 vendor
+aei
 export*
 *.o
 result

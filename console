@@ -57,17 +57,28 @@ when 'package'
   Command.package(start, clean, res, aei, zip)
 
 when 'extract'
-  Command.extract(start)
+  copy_aei = get_command_line_argument('copy_aei', false)
+  Command.extract(start, copy_aei)
+
+when 'extract-mass'
+  copy_aei = get_command_line_argument('copy_aei', false)
+  Command.extract_mass(start, stop, copy_aei)
   
 when 'rcopy'
   Command.rcopy(start, stop)
   
 when 'stat'
   Command.stat
+
+when 'stat-table'
+  Command.stat_table
  
 when 'find'
   current = get_command_line_argument('current', false)
   Command.find(start, current)
+
+when 'find-mass'
+  Command.find_mass(start, stop)
   
 when 'calc'
   Command.calc(start)

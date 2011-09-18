@@ -37,4 +37,17 @@ class Command
     puts "Total asteroids: \n Pure: #{tmp1} \n Transient: #{tmp2}"    
   end
   
+  def self.stat_table
+    
+    File.open('axis/'+CONFIG['resonance_table']['file']).each do |line|
+      arr = line.split(' ')
+      axis = arr[6].to_f
+      arr.delete_at(6)
+      arr.map!{|elem| elem.to_i}
+      puts axis.to_s+';1'
+    end
+    
+  end
+  
+  
 end

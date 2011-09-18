@@ -1,4 +1,4 @@
-debug: false
+debug: true
 
 resonance_table:
   format: simple
@@ -25,9 +25,9 @@ integrator:
   number_of_bodies: 100
 
 resonance:
-  axis_error: 0.02
+  axis_error: 0.01
   libration:
-    min: 15000
+    min: 20000
   db_file: export/full.db
   bodies:
     - JUPITER
@@ -45,6 +45,7 @@ output:
 
 export:
   base_dir: export
+  aei_dir:  aei
   structure:
     - aei
     - mercury

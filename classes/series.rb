@@ -30,25 +30,27 @@ class Series
       data[1] = (data[1]+Math::PI).by_mod if transport
       
       # If the distance (OY axis) between new point and previous more than PI then there is a break (circulation)
-      if (previous && ((previous - data[1]).abs >= Math::PI) )
-        if (!find_all)
-          return data[0]
-        end
+      if (data[1])
+        if (previous && ((previous - data[1]).abs >= Math::PI) )
+          if (!find_all)
+            return data[0]
+          end
 
-        if ((previous - data[1]) > 0)
-          c_break = 1
-        else
-          c_break = -1
-        end
+          if ((previous - data[1]) > 0)
+            c_break = 1
+          else
+            c_break = -1
+          end
         
-        # For apocentric libration there could be some breaks by following schema: break on 2*Pi, then break on 2*Pi e.t.c
-        # So if the breaks are on the same value there is no circulation at this moment
-        if ((c_break != p_break) && (p_break != 0))
-          breaks.delete_at(breaks.size-1)
-        end
+          # For apocentric libration there could be some breaks by following schema: break on 2*Pi, then break on 2*Pi e.t.c
+          # So if the breaks are on the same value there is no circulation at this moment
+          if ((c_break != p_break) && (p_break != 0))
+            breaks.delete_at(breaks.size-1)
+          end
         
-        breaks.push(data[0])
-        p_break = c_break
+          breaks.push(data[0])
+          p_break = c_break
+        end
       end
       previous = data[1]
     end

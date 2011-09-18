@@ -3,7 +3,7 @@ class ResonanceArchive
   # Extract resonance file from archive to directory in export folder
   # start — first object number for extracting (start + number of bodies)
   # elements — should mercury6 create aei files for all objects?
-  def self.extract(start, elements = false)
+  def self.extract(start, elements = false, copy_aei = false)
     
     debug = CONFIG['debug']
     
@@ -18,6 +18,15 @@ class ResonanceArchive
     num_b      = CONFIG['integrator']['number_of_bodies'].to_i
     
     start = start - start%num_b
+    
+    # Check directory in aei export archive
+    body_number_start = start
+    body_number_stop  = start+num_b
+    aei_dir = CONFIG['export']['aei_dir']+'/'+body_number_start.to_s+'-'+body_number_stop.to_s+'/aei'
+    
+    if (File.exists?(aei_dir+'/A'+start.to_s+'.aei'))
+      return true
+    end
     
     export_dir = CONFIG['export']['base_dir']+'/'+start.to_s+'-'+(start+num_b).to_s
     tar_file   = 'integration'+start.to_s+'-'+(start+num_b).to_s+'.tar.gz' 
@@ -79,6 +88,13 @@ class ResonanceArchive
         print "[done]\n".to_green if debug
       end
       
+    end
+    
+    if (copy_aei)
+      puts "Copy AEI files to export directory"
+      100.times do |i|
+        `cp mercury/A#{start+i}.aei #{export_dir}/aei`
+      end
     end
     
     true
