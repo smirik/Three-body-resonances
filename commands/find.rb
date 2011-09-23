@@ -34,13 +34,14 @@ class Command
           has_resonance = false
           puts "Check asteroid #{asteroid_num}" if debug
           Mercury6.calc(asteroid_num, resonance)
-          has_circulation = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
+          has_circulation  = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], false, true)
+          has_circulation2 = Series.findCirculation(asteroid_num, 0, CONFIG['gnuplot']['x_stop'], true, true) # apocentric libration
           hash_r = hash_resonance(resonance)
           if (has_circulation)
             if (has_circulation[1])
               max = Series.max(has_circulation[0])
               puts "A#{asteroid_num}, % = #{has_circulation[1]}%, medium period = #{has_circulation[2]}, max = #{max}, resonance = #{resonance.inspect}"
-              s = asteroid_num.to_s+';'+resonance.inspect+';2'+has_circulation[2].to_s+';'+max.to_s
+              s = asteroid_num.to_s+';'+resonance.inspect+';2;'+has_circulation[2].to_s+';'+max.to_s
               rdb.addString(s)
               has_resonance = true
             else
@@ -50,6 +51,12 @@ class Command
           else
             puts "A#{asteroid_num}, pure resonance #{resonance.inspect}"
             s = asteroid_num.to_s+';'+resonance.inspect+';1'
+            rdb.addString(s)
+            has_resonance = true
+          end
+          if (!has_circulation2)
+            puts "A#{asteroid_num}, pure apocentric resonance #{resonance.inspect}"
+            s = asteroid_num.to_s+';'+resonance.inspect+';3'
             rdb.addString(s)
             has_resonance = true
           end

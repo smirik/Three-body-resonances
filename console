@@ -72,6 +72,9 @@ when 'stat'
 
 when 'stat-table'
   Command.stat_table
+
+when 'stat-order'
+  Command.stat_order
  
 when 'find'
   current = get_command_line_argument('current', false)

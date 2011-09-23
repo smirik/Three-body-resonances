@@ -48,6 +48,22 @@ class Command
     end
     
   end
-  
+
+  def self.stat_order
+    rdb = ResonanceDatabase.new('export/full.db')
+    
+    orders = [0, 0, 0, 0, 0, 0, 0, 0]
+    
+    File.open(rdb.db_file).each do |line|
+      tmp   = rdb.parse_line(line)
+      order = tmp[2][5].abs.to_i
+      orders[order]+=1
+    end
+    
+    orders.each_with_index do |value, key|
+      puts "#{key};#{value}"
+    end
+    
+  end
   
 end
