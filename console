@@ -68,7 +68,8 @@ when 'rcopy'
   Command.rcopy(start, stop)
   
 when 'stat'
-  Command.stat
+  gcd = get_command_line_argument('gcd', false)
+  Command.stat(gcd)
 
 when 'stat-table'
   Command.stat_table
