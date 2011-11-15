@@ -99,11 +99,11 @@ when 'resonance-show'
 when 'mediana'
   Command.mediana(start)
 
-when 'resonances'
-  Command.resonances(start, stop)
-
 when 'mediana-mass'
   Command.mediana_mass(start, stop)
+
+when 'resonances'
+  Command.resonances(start, stop)
 
 when 'complex'
 
