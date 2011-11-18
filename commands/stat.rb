@@ -1,6 +1,6 @@
 class Command
   
-  def self.stat(gcd = false)
+  def self.stat(gcd = false, export = false)
     rdb = ResonanceDatabase.new('export/full.db')
 
     resonances      = Hash.new
@@ -9,8 +9,8 @@ class Command
     File.open(rdb.db_file).each do |line|
       tmp = rdb.parse_line(line)
       if (tmp)
-        next if (((tmp[2][0].to_i % 2)==0.0) && ((tmp[2][1].to_i % 2)==0.0) && ((tmp[2][2].to_i % 2)==0.0) && (gcd))
-        next if (((tmp[2][0].to_i % 3)==0.0) && ((tmp[2][1].to_i % 3)==0.0) && ((tmp[2][2].to_i % 3)==0.0) && (gcd))
+        next if (((tmp[2][0].to_i.abs % 2)==0.0) && ((tmp[2][1].to_i.abs % 2)==0.0) && ((tmp[2][2].to_i.abs % 2)==0.0) && (gcd))
+        next if (((tmp[2][0].to_i.abs % 3)==0.0) && ((tmp[2][1].to_i.abs % 3)==0.0) && ((tmp[2][2].to_i.abs % 3)==0.0) && (gcd))
         if (resonances.has_key?(tmp[2]))
           resonances[tmp[2]] =resonances[tmp[2]]+1
           if (tmp[1] == 1)
@@ -29,7 +29,11 @@ class Command
     tmp2 = 0
     resonances.sort_by{|key, value| value}.reverse.each do |key, value|
       tmp  = resonances_pure[key]
-      puts "#{key.inspect} : #{value} : #{tmp}"
+      if (export == 'csv')
+        puts "#{key[6]};#{value};#{key[0]} #{key[1]} #{key[2]} #{key[3]} #{key[4]} #{key[5]}"
+      else
+        puts "#{key.inspect} : #{value} : #{tmp}"
+      end
       tmp1+=value.to_i
       tmp2+=resonances_pure[key].to_i
     end

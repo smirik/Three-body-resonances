@@ -69,7 +69,8 @@ when 'rcopy'
   
 when 'stat'
   gcd = get_command_line_argument('gcd', false)
-  Command.stat(gcd)
+  export = get_command_line_argument('export', false)
+  Command.stat(gcd, export)
 
 when 'stat-table'
   Command.stat_table
@@ -100,10 +101,13 @@ when 'mediana'
   Command.mediana(start)
 
 when 'mediana-mass'
-  Command.mediana_mass(start, stop)
+  resonance = get_command_line_argument('resonance', false)
+  Command.mediana_mass(start, stop, resonance)
 
 when 'resonances'
-  Command.resonances(start, stop)
+  resonance = get_command_line_argument('resonance', false)
+  resonance = resonance.delete('[').delete(']').split(',').map{|x| x.to_f} if resonance
+  Command.resonances(start, stop, resonance)
 
 when 'complex'
 
