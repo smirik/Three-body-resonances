@@ -15,3 +15,7 @@ output/png_res/*
 input/mercury/*.in
 export
 mercury
+output/png*
+output/res*
+output/images*
+output/gnu*

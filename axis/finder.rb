@@ -16,9 +16,9 @@ def find_resonance_by_axis(axis, error = 0.0001, just_one = true)
 
   File.open(r_file).each do |line|
     arr = line.split(' ').map{|x| x.to_f}
-    if ((arr[6] - axis).abs <= error )
+    if ((arr[4] - axis).abs <= error )
       res.push(arr)
-      min_array.push(arr[6] - axis)
+      min_array.push(arr[4] - axis)
     end
   end
   

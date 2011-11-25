@@ -18,17 +18,13 @@ class Command
       arr = AstDys.find_by_number(num)
       resonances.push(find_resonance_by_axis(arr[1], axis_error, false))
     end 
-
     number_of_steps = (stop-start)-1
-
     rdb = ResonanceDatabase.new('export/full.db')
     
     is_extracted = ResonanceArchive.extract(start) unless current
-    
     puts "Find resonances"
     for i in 0..number_of_steps
       asteroid_num = start + i
-      
       if (resonances[i])
         resonances[i].each do |resonance|
           has_resonance = false

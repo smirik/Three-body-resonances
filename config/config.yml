@@ -1,4 +1,4 @@
-debug: false
+debug: true
 
 resonance_table:
   format: simple
@@ -25,7 +25,7 @@ integrator:
   number_of_bodies: 100
 
 resonance:
-  axis_error: 0.01
+  axis_error: 0.1
   libration:
     min: 20000
   db_file: export/full.db
@@ -37,9 +37,9 @@ resonance:
     - 6
 
 output:
-  angle:   output/res
-  gnuplot: output/gnu
-  images:  output/images
+  angle:   output/res2
+  gnuplot: output/gnu2
+  images:  output/images2
 
   format:  png
 
