@@ -7,10 +7,10 @@ result
 calc
 axis/*.o
 axis/axis
-output/png/*
-output/res/*
-output/gnu/*
-output/images
+output/png*
+output/res*
+output/gnu*
+output/images*
 output/png_res/*
 input/mercury/*.in
 export
