@@ -77,7 +77,8 @@ when 'stat-table'
 
 when 'stat-order'
   pure = get_command_line_argument('pure', false)
-  Command.stat_order(pure)
+  sum_module = get_command_line_argument('sum_module', false)
+  Command.stat_order(pure, sum_module)
  
 when 'find'
   current = get_command_line_argument('current', false)

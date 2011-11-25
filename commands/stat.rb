@@ -54,13 +54,14 @@ class Command
     
   end
 
-  def self.stat_order(pure = false)
+  def self.stat_order(pure = false, sum_module = false)
     rdb = ResonanceDatabase.new('export/full.db')
     
     orders = [0, 0, 0, 0, 0, 0, 0, 0]
     File.open(rdb.db_file).each do |line|
       tmp   = rdb.parse_line(line)
       next if (((tmp[2][0].to_i % 2)==0) && ((tmp[2][1].to_i % 2)==0) && ((tmp[2][2].to_i % 2)==0) )
+      next if (sum_module && ((tmp[2][0].to_i.abs + tmp[2][1].to_i.abs + tmp[2][2].to_i.abs) > sum_module.to_i) )
       order = tmp[2][5].abs.to_i
       orders[order]+=1 if (!pure || (pure && ((tmp[1] == 1) || (tmp[1] == 3))))
     end
