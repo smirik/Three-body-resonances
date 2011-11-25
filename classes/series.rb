@@ -5,15 +5,14 @@ class Series
   # return false if there is no circulations
   # return -1 if error
   def self.findCirculation(body_number, start, stop, transport = false, find_all = false)
-
-    file = 'output/res/A'+body_number.to_s+'.res'
+    angle_dir = CONFIG['output']['angle']
+    file = angle_dir+'/A'+body_number.to_s+'.res'
 
     data     = Array.new
     breaks   = Array.new # circulation breaks by OX
     previous = false
     
     libration_min = CONFIG['resonance']['libration']['min']
-    
     if (!File.exist?(file))
       return -1
     end
@@ -21,7 +20,6 @@ class Series
     c_break  = 0
     p_break  = 0
     pp_break = 0
-    
     File.open(file).each do |line|
       
       data = line.split(' ').map{|x| x.strip.to_f}
@@ -54,7 +52,6 @@ class Series
       end
       previous = data[1]
     end
-    
     # pure libration if there are no breaks (or just one for apocentric libration e.g.)
     if ((breaks.empty?) || (breaks.size == 1))
       false
@@ -77,7 +74,6 @@ class Series
       end
       delta = delta/breaks.size
       libration_percent = libration/(stop-start)*100 # years in libration in percents
-
       if (libration_percent > 0)
         [breaks, libration_percent, delta]
       else

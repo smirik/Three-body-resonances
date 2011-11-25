@@ -15,11 +15,11 @@ set multiplot layout 7, 1
 # Resonant parameter
 #set title "Резонансный аргумент"
 set ylabel "Sigma"
-set ytics -100, 2, 100 format "%.0f"
+#set ytics -100, 2, 100 format "%.0f"
 plot 'result' using 1:2 lt -1 lc -1 notitle with dots
 # S/m axis
 set ylabel "a"
-set ytics format "%.3f" -100, 0.005, 100
+#set ytics format "%.3f" -100, 0.005, 100
 plot 'result' using 1:3 lt -1 title '' with dots
 # Eccentricity
 set ylabel "e"
