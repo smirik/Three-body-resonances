@@ -30,7 +30,7 @@ for i in 1..max_order
     next if (i<j)
     next if (i.gcd(j) > 1)
     diff = (i - j).to_i
-    resonance = [i,-j,0,diff]
+    resonance = [i,-j,0,-diff]
     #next if (diff.abs > max_order)
     asteroid.axis = jupiter.axis*(((j.to_f/i.to_f)**(2.0))**(1.0/3))
     if (asteroid.axis != 0)
@@ -46,6 +46,5 @@ for i in 1..max_order
 end
 
 if (debug)
-  puts "total = #{count}, #{count2}"
 end
 

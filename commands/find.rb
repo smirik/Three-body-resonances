@@ -64,13 +64,14 @@ class Command
   
   def self.find_mass(start, stop)
     num_b = CONFIG['integrator']['number_of_bodies']
+    res_dir = CONFIG['output']['angle']
     diff  = stop-start
     steps = (diff-diff%num_b)/num_b
     
     steps.times do |i|
       c_start = start+i*num_b
       puts `./console find --start=#{c_start}`
-      `rm -f output/res/*.res`
+      `rm -f #{res_dir}/*.res`
     end
   end
   
