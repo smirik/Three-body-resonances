@@ -97,7 +97,7 @@ class Series
   end
   
   def self.calc_mediana(body_number)
-    file = 'output/res/A'+body_number.to_s+'.res'
+    file = CONFIG['output']['angle']+'/A'+body_number.to_s+'.res'
     counter = 0
     axis    = 0.0
     ecc     = 0.0
