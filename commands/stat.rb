@@ -9,11 +9,11 @@ class Command
     File.open(rdb.db_file).each do |line|
       tmp = rdb.parse_line(line)
       if (tmp)
-        next if (((tmp[2][0].to_i.abs % 2)==0.0) && ((tmp[2][1].to_i.abs % 2)==0.0) && ((tmp[2][2].to_i.abs % 2)==0.0) && (gcd))
-        next if (((tmp[2][0].to_i.abs % 3)==0.0) && ((tmp[2][1].to_i.abs % 3)==0.0) && ((tmp[2][2].to_i.abs % 3)==0.0) && (gcd))
+        #next if (((tmp[2][0].to_i.abs % 2)==0.0) && ((tmp[2][1].to_i.abs % 2)==0.0) && ((tmp[2][2].to_i.abs % 2)==0.0) && (gcd))
+        #next if (((tmp[2][0].to_i.abs % 3)==0.0) && ((tmp[2][1].to_i.abs % 3)==0.0) && ((tmp[2][2].to_i.abs % 3)==0.0) && (gcd))
         if (resonances.has_key?(tmp[2]))
           resonances[tmp[2]] =resonances[tmp[2]]+1
-          if (tmp[1] == 1)
+          if ((tmp[1] == 1) || (tmp[1] == 3))
             if (resonances_pure.has_key?(tmp[2]))
               resonances_pure[tmp[2]] =resonances_pure[tmp[2]]+1
             else
@@ -22,6 +22,13 @@ class Command
           end
         else
           resonances[tmp[2]] = 1
+          if ((tmp[1] == 1) || (tmp[1] == 3))
+            if (resonances_pure.has_key?(tmp[2]))
+              resonances_pure[tmp[2]] =resonances_pure[tmp[2]]+1
+            else
+              resonances_pure[tmp[2]] = 1
+            end
+          end
         end
       end
     end
@@ -57,13 +64,18 @@ class Command
   def self.stat_order(pure = false, sum_module = false)
     rdb = ResonanceDatabase.new('export/full.db')
     
-    orders = [0, 0, 0, 0, 0, 0, 0, 0]
+    orders = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     File.open(rdb.db_file).each do |line|
       tmp   = rdb.parse_line(line)
-      next if (((tmp[2][0].to_i % 2)==0) && ((tmp[2][1].to_i % 2)==0) && ((tmp[2][2].to_i % 2)==0) )
-      next if (sum_module && ((tmp[2][0].to_i.abs + tmp[2][1].to_i.abs + tmp[2][2].to_i.abs) > sum_module.to_i) )
-      order = tmp[2][5].abs.to_i
-      orders[order]+=1 if (!pure || (pure && ((tmp[1] == 1) || (tmp[1] == 3))))
+      #next if (((tmp[2][0].to_i % 2)==0) && ((tmp[2][1].to_i % 2)==0) )
+      #next if (sum_module && ((tmp[2][0].to_i.abs + tmp[2][1].to_i.abs) > sum_module.to_i) )
+      order = tmp[2][3].abs.to_i
+      if (pure)
+        if ((tmp[1].to_i == 1) || (tmp[1].to_i == 3))
+          orders[order]+=1
+        end
+      end
+      #orders[order]+=1 if (!pure || (pure && ((tmp[1] == 1) || (tmp[1] == 3))))
     end
     
     orders.each_with_index do |value, key|
