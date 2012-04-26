@@ -110,6 +110,15 @@ when 'resonances'
   resonance = resonance.delete('[').delete(']').split(',').map{|x| x.to_f} if resonance
   Command.resonances(start, stop, resonance)
 
+when 'results'
+  resonance = get_command_line_argument('resonance', false)
+  file      = get_command_line_argument('file', false)
+  pure      = get_command_line_argument('pure', false)
+  three_body = get_command_line_argument('three_body', false)
+  three_body = false if three_body == "0"
+  s = pure.split(',').map{|elem| elem.to_i}
+  Command.results(file, resonance, s, three_body)
+
 when 'complex'
 
 else
