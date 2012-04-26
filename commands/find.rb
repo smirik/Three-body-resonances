@@ -74,7 +74,7 @@ class Command
     steps.times do |i|
       c_start = start+i*num_b
       puts `./console find --start=#{c_start}`
-      `rm -f output/res/*.res`
+      `rm -f #{res_dir}/*.res`
     end
   end
   
