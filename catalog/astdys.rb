@@ -1,11 +1,6 @@
-require 'yaml'
-require 'classes/degrees.rb'
+require 'catalog/catalog.rb'
 
-if (!defined? CONFIG)
-  CONFIG = YAML.load_file('config/config.yml')
-end
-
-class AstDys
+class AstDys < Catalog
   
   # Find asteroid elements by number
   def self.find_by_number(number)
