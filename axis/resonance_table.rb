@@ -22,7 +22,7 @@ format = CONFIG['resonance_table']['format']
 
 # resonance = [5, -2, -2, 0, 0, 1]
 
-max_order = 11
+max_order = 25
 count  = 0
 
 for i in 1..max_order
