@@ -4,7 +4,7 @@ catalog/*.num
 catalog/*.syn
 vendor
 aei
-export*
+export*/*
 *.o
 result
 calc
