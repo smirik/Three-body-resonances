@@ -1,27 +1,25 @@
 require 'classes/body.rb'
-require 'catalog/astdys.rb'
 
 class Asteroid < Body
   
   attr_accessor :number
   attr_accessor :resonance
   attr_accessor :libration_type
+  attr_accessor :catalog
   
-  def initialize(number, resonance = false)
+  def initialize(number, resonance = false, catalog = 'astdys')
     @number = number.to_i
-    if (resonance)
-      @resonance = resonance
-    end
+    @resonance = resonance if (resonance)
+    @catalog = catalog
   end
   
-  def find_by_number
-    AstDys.find_by_number(@number)
+  def find
+    catalog = Catalog.byClass(@catalog)
+    eval("#{catalog}.find(#{@number})")
   end
   
-  def resonance_to_string
-    @resonance.inspect
+  def to_s
+    p "#{@number};#{@resonance.inspect}"
   end
-  
-  
   
 end

@@ -1,44 +1,16 @@
 #!/usr/bin/ruby
-# Extract integrator files from archive
-require 'yaml'
-require 'catalog/astdys.rb'
-require 'mercury/mercury6.rb'
-require 'classes/colorize.rb'
-require 'commands/command.rb'
-require 'classes/functions.rb'
-require 'classes/asteroid.rb'
-require 'classes/resonance_archive.rb'
+
+require 'config/config.rb'
+require 'classes/console.rb'
 require 'classes/resonance_database.rb'
-require 'classes/series.rb'
-require 'classes/view.rb'
-require 'axis/finder.rb'
 
 num_b = CONFIG['integrator']['number_of_bodies']
 
-start    = get_command_line_argument('start', false)
-stop     = get_command_line_argument('stop',  false)
+action = Console.action
 
-action = false
-action = ARGV[0] if !ARGV.empty?
+Command.make
 
-if (!action)
-  print "[Warning]".to_red+' Please, specify action: '
-  action = gets.to_s
-end
-
-if (!start)
-  print "[Warning]".to_red+' Please, specify first object number: '
-  start  = gets
-end
-
-start = start.to_i
-
-if (!stop)
-  stop = start + CONFIG['integrator']['number_of_bodies']
-end
-stop = stop.to_i
-
-action.strip!
+raise
 
 case action
 

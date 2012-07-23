@@ -7,7 +7,7 @@ class Body
                 :eccentric_anomaly, :ecliptic_longitude, :ecliptic_latitude, :argument_of_latitude, 
                 :mean_motion
 
-  def mean_motion_from_axis()
+  def n_from_a
     @mean_motion = Math.sqrt(CONFIG['constants']['k2'] / (@axis**3))
   end
   
@@ -16,17 +16,16 @@ class Body
     mean_motion
   end
   
-  def axis_from_mean_motion()
+  def a_from_n
     @axis = (CONFIG['constants']['k'] / (@mean_motion))**(2.0/3)
   end
 
-  def full_pp
+  def pp
     puts "a = #{@axis}, ecc = #{@eccentricity}, parameter = #{parameter}, mean motion = #{mean_motion}"
     puts "true anomaly = #{@true_anomaly}, node longitude = #{longitude_node}, incl = #{inclination}"
     puts "mean anomaly = #{@mean_anomaly}, square const = #{@square_constant}, ecliptic longitude = #{ecliptic_longitude}"
     puts "argument of latitude = #{@argument_of_latitude}, eclipt. latitude = #{ecliptic_latitude}"
     puts "eccentric_anomaly = #{eccentric_anomaly}, argument of periapsis = #{argument_of_periapsis}"
-    raise
   end
   
   def from(pos, vel)

@@ -1,4 +1,7 @@
 catalog/*.cat
+catalog/allnum*
+catalog/*.num
+catalog/*.syn
 vendor
 aei
 export*

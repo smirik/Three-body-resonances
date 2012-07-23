@@ -1,17 +1,13 @@
-require 'yaml'
+require 'config/config.rb'
 
-if (!defined? CONFIG)
-  CONFIG = YAML.load_file('config/config.yml')
-end
-
-class View
+class Gnuplot
   
-  def self.createGnuplotFile(body_number, type = 1)
-    output_gnu    = CONFIG['output']['gnuplot']
-    output_res    = CONFIG['output']['angle']
+  def self.create(body_number, type = 1)
+    output_gnu = CONFIG['output']['gnuplot']
+    output_res = CONFIG['output']['angle']
     
-    gnuplot_sample_file = File.open('output/multi.gnu', 'r')
-    content = gnuplot_sample_file.read
+    sample  = File.open('output/multi.gnu', 'r')
+    content = sample.read
     
     # Change filename
     content.gsub!("result", output_res+'/A'+body_number.to_s+'.res')
@@ -24,7 +20,7 @@ class View
     gnuplot_file = File.open(output_gnu+'/A'+body_number.to_s+'.gnu', 'w+')
     gnuplot_file.puts(content)
     
-    gnuplot_sample_file.close
+    sample.close
     gnuplot_file.close
   end
   

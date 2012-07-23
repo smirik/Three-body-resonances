@@ -1,47 +1,42 @@
+require 'classes/asteroid.rb'
+require 'axis/resonance.rb'
+
 class ResonanceDatabase
   
-  attr_accessor :db_file
+  attr_accessor :db
   
-  # Initialized database from db_file
-  def initialize(db_file = false)
-    if (db_file)
-      @db_file = db_file
-    else
-      @db_file = CONFIG['resonance']['db_file']
-    end
+  # Initialized database from db
+  def initialize(db = false)
+    (db) ? @db = db : @db = CONFIG['resonances']['db']
     self.createIfNotExists
   end
   
   # Create empty database file (for new actions)
   def create
-    File.open(@db_file, "w" ) do |file|
+    File.open(@db, "w" ) do |file|
     end
   end
   
-  # Create empty database file (for new actions) if @db_file doesn't exists
+  # Create empty database file (for new actions) if @db doesn't exists
   def createIfNotExists
-    if (!File.exists?(@db_file))
-      self.create
-    end
+    self.create unless File.exists?(@db)
   end
   
   # Checks has the given asteroid resonance or no
   # body_number: number of body
-  def check?(body_number)
-    File.open(@db_file, 'r').each do |line|
+  def body?(body_number)
+    File.open(@db, 'r').each do |line|
       arr = line.split(';')
-      if (arr[0].to_i == body_number)
-        return true
-      end
+      return true if (arr[0].to_i == body_number)
     end
     false
   end
   
-  # Check is there in @db_file string ss
+  # Check is there in @db string ss
   # ss: given string
-  def checkString?(ss)
-    File.open(@db_file, 'r').each do |line|
-      return true if (line.include?(ss))
+  def string?(ss)
+    File.open(@db, 'r').each do |line|
+      return true if line.include?(ss)
     end
     false
   end
@@ -52,22 +47,21 @@ class ResonanceDatabase
   # type: type of resonance
   def add(body_number, resonance, type = 1)  
     if !self.check?(body_number)
-      File.open(@db_file, 'a+') do |db|
+      File.open(@db, 'a+') do |db|
         db.puts(body_number.to_s+';'+type.to_s+';'+resonance.inspect)
       end
-      true
-    else
-      false
+      return true
     end
+    false
   end
   
-  # Add new string to @db_file (if this string doesn't exist yet)
+  # Add new string to @db (if this string doesn't exist yet)
   # ss: given string
   def addString(ss)
     tmp = ss.split(';')
     s = tmp[0].to_s+';'+tmp[1].to_s
-    if (!self.checkString?(s))
-      File.open(@db_file, 'a+') do |db|
+    unless self.checkString?(s)
+      File.open(@db, 'a+') do |db|
         db.puts(ss) 
       end
     end
@@ -76,9 +70,9 @@ class ResonanceDatabase
   # Find all asteroids in resonances for given interval [start, stop] in body numbers
   # start: start of the interval
   # stop: stop of the interval
-  def find_between(start, stop)
-    asteroids = Array.new
-    File.open(@db_file, 'r').each do |line|
+  def findByNumbers(start, stop)
+    asteroids = []
+    File.open(@db, 'r').each do |line|
       arr = line.split(';')
       tmp = arr[0].to_i
       if ((tmp >= start) && (tmp <= stop) )
@@ -91,30 +85,21 @@ class ResonanceDatabase
   
   # Find all asteroids in given resonance
   # resonance: resonance array
-  def find_asteroids_in_resonance(c_resonance)
-    asteroids = Array.new
-    File.open(CONFIG['resonance']['db_file'], 'r').each do |line|
+  def findByResonance(r)
+    asteroids = []
+    File.open(@db, 'r').each do |line|
       arr = line.split(';')
-      resonance = arr[1].gsub!('[', '').gsub!(']', '').split(', ').map{|elem| elem.to_f}
-      if ((resonance[0] == c_resonance[0]) && (resonance[1] == c_resonance[1]) && (resonance[2] == c_resonance[2]))
-        asteroid_num = arr[0].to_i
-        asteroids.push(Asteroid.new(asteroid_num, c_resonance))
-      end
+      asteroids.push(Asteroid.new(arr[0].to_i, r.resonance)) if r.equals?(arr[1])
     end
     asteroids
   end
   
   # parse one line of database file 
   # line: string from database file
-  def parse_line(line)
-    if (line.include?(';'))
-      arr = line.split(';')
-      tmp = arr[0].to_i
-      resonance = arr[1].delete('[').delete(']').split(',').map{|x| x.to_f}
-      [tmp, arr[2].to_i, resonance]
-    else
-      false
-    end
+  def parse(line)
+    return false unless line.include?(';')
+    arr = line.split(';')
+    [arr[0].to_i, arr[2].to_i, Resonance.from_s(arr[1])]
   end
   
 end
